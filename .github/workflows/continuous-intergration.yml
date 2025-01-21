@@ -27,11 +27,14 @@ jobs:
           java-version: 21
           distribution: 'corretto'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582
-
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v3
+        with:
+          arguments: build
+          cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/develop' }}
 
       - name: Build with Gradle
         run: ./gradlew build -x test
@@ -39,18 +42,15 @@ jobs:
       - name: Test with Gradle
         run: ./gradlew test
 
-      - name: Cache Gradle packages
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
       - name: Report Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
           files: build/test-results/**/*.xml
+
+      - name: Upload Jacoco Report
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4.6.0
+        with:
+          name: jacoco-report
+          path: build/reports/jacoco/test/html
