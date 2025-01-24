@@ -1,0 +1,37 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+  datasource:
+    username: root
+    password: 1234
+    url: jdbc:mysql://localhost:3306/support?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: 1234
+    listener:
+      direct:
+        prefetch: 600
+      simple:
+        prefetch: 600
+rabbitmq:
+  queue:
+    name: sample.queue
+  exchange:
+    name: sample.exchange
+  routing:
+    key: sample.key
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: false
