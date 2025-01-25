@@ -101,11 +101,11 @@ jobs:
             # ECR 레지스트리에 로그인
             aws ecr get-login-password --region $AWS_REGION | sudo docker login --username AWS --password-stdin $ECR_URI/$ECR_REPOSITORY
             
-            # 기존 컨테이너 정지 및 삭제
-            sudo docker compose down
-            
-            # 최신 이미지를 pull
-            sudo docker compose pull
-            
-            # Docker Compose로 애플리케이션 실행
-            sudo docker compose up -d
+            # 기존 컨테이너 다운
+            sudo docker compose -f ~/compose-prod.yml down
+      
+            # 최신 이미지 Pull
+            sudo docker compose -f ~/compose-prod.yml pull
+      
+            # 컨테이너 실행
+            sudo docker compose -f ~/compose-prod.yml up -d
