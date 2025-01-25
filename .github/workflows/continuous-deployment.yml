@@ -80,7 +80,7 @@ jobs:
           host: ${{ secrets.EC2_IP }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: './compose-prod.yaml,./nginx.conf'
+          source: './compose-prod.yml,./nginx.conf'
           target: '/home/ubuntu'
 
       - name: EC2에서 Docker Compose를 통한 애플리케이션 실행
