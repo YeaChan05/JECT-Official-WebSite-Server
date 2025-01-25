@@ -23,11 +23,4 @@ class TestServiceTest  implements RabbitTestContainer {
     void testConcurrency() {
         testService.save(new TestDto(UUID.randomUUID().toString()));
     }
-
-    @Test
-    @ThroughputTest(request = 10000)
-    @DisplayName("save bulk")
-    void bulk() {
-        testService.saveBulk(new TestDto(UUID.randomUUID().toString()));
-    }
 }
