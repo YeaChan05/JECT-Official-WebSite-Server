@@ -5,6 +5,13 @@ on:
     branches:
       - main
 
+permissions:
+  checks: write
+  contents: write
+  pages: write
+  deployments: write
+  pull-requests: write
+
 env:
   AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: was-repo
