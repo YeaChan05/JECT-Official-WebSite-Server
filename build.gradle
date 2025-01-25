@@ -38,8 +38,6 @@ dependencies {
     // MySQL
     runtimeOnly 'com.mysql:mysql-connector-j'
 
-    //RabbitMQ
-    implementation 'org.springframework.boot:spring-boot-starter-amqp'
 
     // QueryDSL
     implementation 'com.querydsl:querydsl-apt:5.0.0'
