@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TestService implements TestUseCase {
     private final TestRepository testRepository;
-    private final RabbitMqService rabbitMqService;
 
     @Override
     @Transactional
@@ -23,11 +22,5 @@ public class TestService implements TestUseCase {
     public TestDto get(final Long id) {
         return testRepository.findById(id)
                 .toDto();
-    }
-
-    @Override
-    @Transactional
-    public void saveBulk(final TestDto testDto) {
-        rabbitMqService.sendMessage(new MessageDto(testDto.name()));
     }
 }

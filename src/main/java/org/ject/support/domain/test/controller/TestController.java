@@ -24,9 +24,4 @@ public class TestController {
     public void createTest(TestDto testDto) {
         testUsecase.save(testDto);
     }
-
-    @PostMapping("/bulk")
-    public void createTestBulk(TestDto testDto) {
-        testUsecase.saveBulk(testDto);
-    }
 }
