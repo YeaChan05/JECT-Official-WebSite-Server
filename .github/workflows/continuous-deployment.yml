@@ -1,8 +1,7 @@
 name: continuous deployment
 
 on:
-  pull_request:
-    types: [closed]
+  merge_group:
     branches:
       - main
 
