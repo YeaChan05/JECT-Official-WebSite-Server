@@ -6,10 +6,9 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
   datasource:
-    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-    url: jdbc:tc:mysql:8.2:///
     username: root
     password: 1234
+    url: jdbc:mysql://localhost:3306/support?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
   data:
     redis:
       host: localhost
@@ -36,8 +35,3 @@ decorator:
   datasource:
     p6spy:
       enable-logging: false
-logging:
-  level:
-    org:
-      springframework:
-        jdbc: debug
