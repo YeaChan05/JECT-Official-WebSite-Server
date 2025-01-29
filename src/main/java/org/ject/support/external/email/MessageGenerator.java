@@ -17,7 +17,6 @@ public class MessageGenerator {
                                                            final EmailTemplate template,
                                                            final Map<String, String> values) {
         Context context = setProperties(values);
-        templateEngine.process(template.getTemplateName(), context);
         String content = templateEngine.process(template.getTemplateName(), context);
 
         return mimeMessage -> {
