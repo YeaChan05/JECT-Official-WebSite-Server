@@ -1,7 +1,6 @@
 package org.ject.support.external.email;
 
 import java.util.Map;
-import java.util.Map.Entry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -31,9 +30,7 @@ public class MessageGenerator {
 
     private static Context setProperties(final Map<String, String> values) {
         Context context = new Context();
-        for (Entry<String, String> entry : values.entrySet()) {
-            context.setVariable(entry.getKey(), entry.getValue());
-        }
+        values.forEach(context::setVariable);
         return context;
     }
 }
