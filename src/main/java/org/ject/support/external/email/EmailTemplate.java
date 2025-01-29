@@ -17,9 +17,9 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 @Getter
 @AllArgsConstructor
 public enum EmailTemplate {
-    ACCEPTANCE("email-template","ject notification"),
-    REJECTION("email-template","ject notification"),
-    CERTIFICATE("email-template","ject certificate");
+    ACCEPTANCE("email-template", "ject notification"),
+    REJECTION("email-template", "ject notification"),
+    CERTIFICATE("email-template", "ject certificate");
 
     private final String templateName;// template file name
     private final String subject;// email subject
