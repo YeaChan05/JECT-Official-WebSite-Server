@@ -1,4 +1,4 @@
-package org.ject.support.domain.recruitment;
+package org.ject.support.domain.recruit;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -22,6 +22,6 @@ public class ApplicationForm extends BaseTimeEntity {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recruitment_id", nullable = false)
-    private Recruitment recruitment;
+    @JoinColumn(name = "recruit_id", nullable = false)
+    private Recruit recruit;
 }

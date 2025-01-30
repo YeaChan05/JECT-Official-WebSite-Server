@@ -1,4 +1,4 @@
-package org.ject.support.domain.recruitment;
+package org.ject.support.domain.recruit;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -8,7 +8,7 @@ import org.ject.support.domain.member.JobFamily;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Recruitment extends BaseTimeEntity {
+public class Recruit extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
