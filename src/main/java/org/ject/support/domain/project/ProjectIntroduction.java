@@ -1,0 +1,19 @@
+package org.ject.support.domain.project;
+
+import jakarta.persistence.*;
+import org.ject.support.common.entity.BaseTimeEntity;
+
+@Entity
+public class ProjectIntroduction extends BaseTimeEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(length = 2083, nullable = false)
+    private String imageUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project;
+}
