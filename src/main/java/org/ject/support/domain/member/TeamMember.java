@@ -1,10 +1,12 @@
-package org.ject.support.domain.team;
+package org.ject.support.domain.member;
 
 import jakarta.persistence.*;
-import org.ject.support.common.entity.BaseTimeEntity;
-import org.ject.support.domain.member.Member;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.ject.support.domain.base.BaseTimeEntity;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TeamMember extends BaseTimeEntity {
 
     @Id

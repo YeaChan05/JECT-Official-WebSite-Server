@@ -1,12 +1,15 @@
 package org.ject.support.domain.project;
 
 import jakarta.persistence.*;
-import org.ject.support.common.entity.BaseTimeEntity;
-import org.ject.support.domain.team.Team;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.ject.support.domain.base.BaseTimeEntity;
+import org.ject.support.domain.member.Team;
 
 import java.time.LocalDate;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Project extends BaseTimeEntity {
 
     @Id
@@ -19,6 +22,8 @@ public class Project extends BaseTimeEntity {
     private String techStack;
     private LocalDate startDate;
     private LocalDate endDate;
+
+    @Column(columnDefinition = "text")
     private String description;
 
     @Column(length = 2083)
@@ -27,7 +32,7 @@ public class Project extends BaseTimeEntity {
     @Column(length = 2083)
     private String serviceUrl;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;
 }

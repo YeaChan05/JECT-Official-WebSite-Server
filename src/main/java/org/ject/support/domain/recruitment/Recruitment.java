@@ -1,10 +1,13 @@
 package org.ject.support.domain.recruitment;
 
 import jakarta.persistence.*;
-import org.ject.support.common.entity.BaseTimeEntity;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.ject.support.domain.base.BaseTimeEntity;
 import org.ject.support.domain.member.JobFamily;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Recruitment extends BaseTimeEntity {
 
     @Id

@@ -1,10 +1,13 @@
 package org.ject.support.domain.project;
 
 import jakarta.persistence.*;
-import org.ject.support.common.entity.BaseTimeEntity;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.ject.support.domain.base.BaseTimeEntity;
 
 @Entity
-public class ProjectIntroduction extends BaseTimeEntity {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class ProjectIntro extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

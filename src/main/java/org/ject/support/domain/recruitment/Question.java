@@ -1,9 +1,12 @@
 package org.ject.support.domain.recruitment;
 
 import jakarta.persistence.*;
-import org.ject.support.common.entity.BaseTimeEntity;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.ject.support.domain.base.BaseTimeEntity;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Question extends BaseTimeEntity {
 
     @Id

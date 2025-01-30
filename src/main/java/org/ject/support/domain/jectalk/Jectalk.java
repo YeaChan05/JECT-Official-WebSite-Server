@@ -1,9 +1,12 @@
 package org.ject.support.domain.jectalk;
 
 import jakarta.persistence.*;
-import org.ject.support.common.entity.BaseTimeEntity;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.ject.support.domain.base.BaseTimeEntity;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Jectalk extends BaseTimeEntity {
 
     @Id
@@ -13,7 +16,7 @@ public class Jectalk extends BaseTimeEntity {
     @Column(length = 50, nullable = false)
     private String name;
 
-    @Column(length = 2083, nullable = false)
+    @Column(length = 2083)
     private String youtubeUrl;
 
     @Column(length = 2083)

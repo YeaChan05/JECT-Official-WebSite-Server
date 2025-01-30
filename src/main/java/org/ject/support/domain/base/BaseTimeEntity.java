@@ -1,4 +1,4 @@
-package org.ject.support.common.entity;
+package org.ject.support.domain.base;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
