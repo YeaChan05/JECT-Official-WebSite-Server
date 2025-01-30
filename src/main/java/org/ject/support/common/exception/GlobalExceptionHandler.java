@@ -22,6 +22,16 @@ public class GlobalExceptionHandler{
     }
 
     /**
+     * 애플리케이션 전역에 문제되는 예외가 발생할 때 처리
+     */
+    @ExceptionHandler(GlobalException.class)
+    protected ErrorCode handleGlobalException(GlobalException e) {
+        GlobalErrorCode errorCode = e.getErrorCode();
+        logException(e, errorCode);
+        return errorCode;
+    }
+
+    /**
      * 요청 매개변수의 타입이 잘못된 경우 발생
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
