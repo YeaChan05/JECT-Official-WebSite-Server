@@ -2,6 +2,8 @@ package org.ject.support.external.email;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -10,20 +12,20 @@ class EmailSendServiceTest {
     @Autowired
     private EmailSendService emailSendService;
 
-//    @Test
-//    @DisplayName("send email")
-//    void send_email() {
+    @Test
+    @DisplayName("send email")
+    void send_email() {
 //        StopWatch stopWatch = new StopWatch();
 //        stopWatch.start();
 //        TestMailParameter parameter = new TestMailParameter("ject", "신예찬");
-//        emailSendService.sendEmail("qkenrdl05@gmail.com", EmailTemplate.ACCEPTANCE, parameter);
+//        emailSendService.sendEmail("****@gmail.com", EmailTemplate.ACCEPTANCE, Json2MapSerializer.serializeAsMap(parameter));
 //        stopWatch.stop();
 //        System.out.println(stopWatch.getTotalTimeSeconds());
-//    }
+    }
 
     @Getter
     @AllArgsConstructor
-    static class TestMailParameter extends MailParameter {
+    static class TestMailParameter {
         private final String to;
         private final String value;
     }
