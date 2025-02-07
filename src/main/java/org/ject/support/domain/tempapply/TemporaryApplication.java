@@ -3,6 +3,7 @@ package org.ject.support.domain.tempapply;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import java.time.LocalDateTime;
 import java.util.Map;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.ject.support.external.dynamodb.domain.CompositeKey;
@@ -17,6 +18,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbConve
 @DynamoDbBean
 @NoArgsConstructor
 @Setter
+@EqualsAndHashCode(callSuper = false)
 public class TemporaryApplication extends EntityWithPrimaryKey {
     private static final String PK_PREFIX = "MEMBER";
     private static final String SK_PREFIX = "TIMESTAMP";
