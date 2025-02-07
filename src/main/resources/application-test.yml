@@ -21,7 +21,12 @@ spring:
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
-
+aws:
+  access-key: accesskey
+  secret-key: secretkey
+  region: ap-northeast-2
+  dynamodb:
+    endpoint: http://localhost:8000
 
 decorator:
   datasource:

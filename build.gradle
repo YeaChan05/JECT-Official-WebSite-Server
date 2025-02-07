@@ -21,6 +21,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url 'https://s3-us-west-2.amazonaws.com/dynamodb-local/release' }
 }
 
 dependencies {
@@ -38,6 +39,12 @@ dependencies {
 
     // MySQL
     runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // AWS DynamoDB
+    implementation(platform("software.amazon.awssdk:bom:2.30.11"))
+    implementation 'software.amazon.awssdk:dynamodb-enhanced'
+    implementation 'com.amazonaws:DynamoDBLocal:2.5.4'
+    implementation 'io.github.boostchicken:spring-data-dynamodb:5.2.5'
 
     // SMTP
     implementation 'org.springframework.boot:spring-boot-starter-mail'
