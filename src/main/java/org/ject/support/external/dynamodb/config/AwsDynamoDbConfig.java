@@ -6,6 +6,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import io.awspring.cloud.dynamodb.DynamoDbTemplate;
 import java.net.URI;
 import org.ject.support.external.dynamodb.repository.DynamoDbRepository;
 import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRepositories;
@@ -54,6 +55,11 @@ public class AwsDynamoDbConfig {
         return DynamoDbEnhancedClient.builder()
                 .dynamoDbClient(dynamoDbClient)
                 .build();
+    }
+
+    @Bean
+    public DynamoDbTemplate dynamoDbTemplate(DynamoDbEnhancedClient dynamoDbClient) {
+        return new DynamoDbTemplate(dynamoDbClient);
     }
 
     @Bean
