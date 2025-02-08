@@ -12,4 +12,7 @@ public interface DynamoDbRepository<T extends EntityWithPrimaryKey> {
     List<T> findByPartitionKey(CompositeKey partitionKey);
     Optional<T> findByPartitionKeyAndSortKey(CompositeKey partitionKey, CompositeKey sortKey);
     List<T> findByPartitionWithSortType(CompositeKey partitionKey, String sortPrefix);
+    void delete(T entity);
+
+    void deleteAll();
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
+import software.amazon.awssdk.enhanced.dynamodb.model.ScanEnhancedRequest;
 
 @Repository
 @RequiredArgsConstructor
@@ -61,4 +62,18 @@ public abstract class AbstractDynamoDbRepository<T extends EntityWithPrimaryKey>
                 .items()
                 .stream().toList();
     }
+
+    @Override
+    public void delete(final T entity) {
+        dynamoDbTemplate.delete(entity);
+    }
+
+    @Override
+    public void deleteAll(){
+        ScanEnhancedRequest request = ScanEnhancedRequest.builder()
+                .build();
+
+        dynamoDbTemplate.scan(request, entityClass)
+                .items().stream().forEach(dynamoDbTemplate::delete);
+    };
 }
