@@ -1,7 +1,8 @@
-package org.ject.support.external.dynamodb.repository;
+package org.ject.support.domain.tempapply.repository;
 
 import io.awspring.cloud.dynamodb.DynamoDbTemplate;
-import org.ject.support.domain.tempapply.TemporaryApplication;
+import org.ject.support.domain.tempapply.domain.TemporaryApplication;
+import org.ject.support.external.dynamodb.repository.AbstractDynamoDbRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -11,7 +12,7 @@ public class TemporaryApplicationRepository extends AbstractDynamoDbRepository<T
     }
 
     @Override
-    void setEntityClass() {
-        this.entityClass = TemporaryApplication.class;
+    protected void setEntityClass() {
+        entityClass = TemporaryApplication.class;
     }
 }

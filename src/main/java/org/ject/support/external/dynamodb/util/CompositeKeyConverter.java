@@ -1,5 +1,6 @@
-package org.ject.support.external.dynamodb.domain;
+package org.ject.support.external.dynamodb.util;
 
+import org.ject.support.external.dynamodb.domain.CompositeKey;
 import software.amazon.awssdk.enhanced.dynamodb.AttributeConverter;
 import software.amazon.awssdk.enhanced.dynamodb.AttributeValueType;
 import software.amazon.awssdk.enhanced.dynamodb.EnhancedType;

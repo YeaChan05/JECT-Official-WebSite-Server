@@ -19,7 +19,7 @@ public abstract class AbstractDynamoDbRepository<T extends EntityWithPrimaryKey>
     protected Class<T> entityClass;
 
     @PostConstruct
-    abstract void setEntityClass();
+    protected abstract void setEntityClass();
 
     @Override
     public T save(final T entity) {

@@ -1,4 +1,4 @@
-package org.ject.support.domain.tempapply;
+package org.ject.support.domain.tempapply.domain;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import java.time.LocalDateTime;
@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.ject.support.external.dynamodb.domain.CompositeKey;
 import org.ject.support.external.dynamodb.domain.EntityWithPrimaryKey;
-import org.ject.support.external.dynamodb.domain.LocalDateTimeConverter;
-import org.ject.support.external.dynamodb.domain.MapConverter;
+import org.ject.support.external.dynamodb.util.LocalDateTimeConverter;
+import org.ject.support.external.dynamodb.util.MapConverter;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbConvertedBy;

@@ -1,4 +1,4 @@
-package org.ject.support.external.dynamodb.domain;
+package org.ject.support.external.dynamodb.util;
 
 import java.util.Map;
 import java.util.stream.Collectors;
