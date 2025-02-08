@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.ject.support.domain.tempapply.domain.TemporaryApplication;
 import org.ject.support.domain.tempapply.repository.TemporaryApplicationRepository;
 import org.ject.support.external.dynamodb.domain.CompositeKey;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 class TemporaryApplicationRepositoryTest {
     @Autowired
     private TemporaryApplicationRepository temporaryApplicationRepository;
+
+
+    @AfterEach
+    void tearDown() {
+        temporaryApplicationRepository.deleteAll();
+    }
 
     @Order(1)
     @Test
