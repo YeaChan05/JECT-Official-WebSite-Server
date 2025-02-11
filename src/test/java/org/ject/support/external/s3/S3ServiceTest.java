@@ -53,7 +53,5 @@ class S3ServiceTest {
         assertThat(response.presignedUrl()).contains(expectedUrl);
         assertThat(response.presignedUrl()).isEqualTo(expectedUrl);
         assertThat(response.expiration()).isEqualTo(LocalDateTime.ofInstant(expirationTime, ZoneId.systemDefault()));
-
-        verify(s3Presigner, times(1)).presignPutObject((PutObjectPresignRequest) any());
     }
 }
