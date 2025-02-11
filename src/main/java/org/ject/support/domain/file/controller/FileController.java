@@ -16,7 +16,7 @@ public class FileController {
     private final S3Service s3Service;
 
     // TODO 인증 어노테이션 추가
-    @PostMapping("/url")
+    @PostMapping("/presigned-url")
     public CreatePresignedUrlResponse createPresignedUrl(Long memberId, @RequestBody final String fileName) {
         return s3Service.createPresignedUrl(memberId, fileName);
     }
