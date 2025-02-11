@@ -18,6 +18,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class S3Service {
 
+    private static final int EXPIRE_MINUTES = 10;
+
     private final S3Presigner s3Presigner;
 
     @Value("${aws.s3.bucket}")
@@ -30,8 +32,7 @@ public class S3Service {
         String uniqueFileName = String.format("%s_%s", UUID.randomUUID(), fileName);
         String keyName = String.format("%s/%s", memberId, uniqueFileName);
 
-        PutObjectRequest objectRequest = createPutObjectRequest(keyName);
-        PutObjectPresignRequest presignRequest = createPutObjectPresignRequest(10, objectRequest);
+        PutObjectPresignRequest presignRequest = createPutObjectPresignRequest(keyName);
         PresignedPutObjectRequest presignedRequest = s3Presigner.presignPutObject(presignRequest);
 
         return new CreatePresignedUrlResponse(
@@ -40,17 +41,17 @@ public class S3Service {
                 LocalDateTime.ofInstant(presignedRequest.expiration(), ZoneId.systemDefault()));
     }
 
+    private PutObjectPresignRequest createPutObjectPresignRequest(String keyName) {
+        return PutObjectPresignRequest.builder()
+                .signatureDuration(Duration.ofMinutes(EXPIRE_MINUTES))
+                .putObjectRequest(createPutObjectRequest(keyName))
+                .build();
+    }
+
     private PutObjectRequest createPutObjectRequest(String keyName) {
         return PutObjectRequest.builder()
                 .bucket(bucket)
                 .key(keyName)
-                .build();
-    }
-
-    private PutObjectPresignRequest createPutObjectPresignRequest(long expireMinutes, PutObjectRequest objectRequest) {
-        return PutObjectPresignRequest.builder()
-                .signatureDuration(Duration.ofMinutes(expireMinutes))
-                .putObjectRequest(objectRequest)
                 .build();
     }
 }
