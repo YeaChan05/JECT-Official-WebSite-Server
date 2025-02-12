@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/upload")
 @RequiredArgsConstructor
@@ -17,7 +19,15 @@ public class FileController {
 
     // TODO 인증 어노테이션 추가
     @PostMapping("/presigned-url")
-    public CreatePresignedUrlResponse createPresignedUrl(Long memberId, @RequestBody final String fileName) {
+    public CreatePresignedUrlResponse createPresignedUrl(final Long memberId,
+                                                         @RequestBody final String fileName) {
         return s3Service.createPresignedUrl(memberId, fileName);
+    }
+
+    // TODO 인증 어노테이션 추가
+    @PostMapping("/presigned-urls")
+    public List<CreatePresignedUrlResponse> createPresignedUrls(final Long memberId,
+                                                                @RequestBody final List<String> fileNames) {
+        return s3Service.createPresignedUrls(memberId, fileNames);
     }
 }

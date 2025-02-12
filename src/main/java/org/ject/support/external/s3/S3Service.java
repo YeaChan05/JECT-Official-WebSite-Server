@@ -12,6 +12,7 @@ import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignReques
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -29,29 +30,49 @@ public class S3Service {
      * 사용자가 첨부한 파일 이름과 해당 사용자의 식별자를 토대로 Pre-signed URL 생성
      */
     public CreatePresignedUrlResponse createPresignedUrl(Long memberId, String fileName) {
-        String uniqueFileName = String.format("%s_%s", fileName, UUID.randomUUID());
-        String keyName = String.format("%s/%s", memberId, uniqueFileName);
-
-        PutObjectPresignRequest presignRequest = createPutObjectPresignRequest(keyName);
+        String keyName = getKeyName(memberId, fileName);
+        PutObjectPresignRequest presignRequest = getPutObjectPresignRequest(keyName);
         PresignedPutObjectRequest presignedRequest = s3Presigner.presignPutObject(presignRequest);
+        return getCreatePresignedUrlResponse(keyName, presignedRequest);
+    }
 
+    private String getKeyName(Long memberId, String fileName) {
+        String uniqueFileName = String.format("%s_%s", fileName, UUID.randomUUID());
+        return String.format("%s/%s", memberId, uniqueFileName);
+    }
+
+    private PutObjectPresignRequest getPutObjectPresignRequest(String keyName) {
+        return PutObjectPresignRequest.builder()
+                .signatureDuration(Duration.ofMinutes(EXPIRE_MINUTES))
+                .putObjectRequest(getPutObjectRequest(keyName))
+                .build();
+    }
+
+    private PutObjectRequest getPutObjectRequest(String keyName) {
+        return PutObjectRequest.builder()
+                .bucket(bucket)
+                .key(keyName)
+                .build();
+    }
+
+    private CreatePresignedUrlResponse getCreatePresignedUrlResponse(String keyName, PresignedPutObjectRequest presignedRequest) {
         return new CreatePresignedUrlResponse(
                 keyName,
                 presignedRequest.url().toExternalForm(),
                 LocalDateTime.ofInstant(presignedRequest.expiration(), ZoneId.systemDefault()));
     }
 
-    private PutObjectPresignRequest createPutObjectPresignRequest(String keyName) {
-        return PutObjectPresignRequest.builder()
-                .signatureDuration(Duration.ofMinutes(EXPIRE_MINUTES))
-                .putObjectRequest(createPutObjectRequest(keyName))
-                .build();
-    }
-
-    private PutObjectRequest createPutObjectRequest(String keyName) {
-        return PutObjectRequest.builder()
-                .bucket(bucket)
-                .key(keyName)
-                .build();
+    /**
+     * 여러 개의 Pre-signed URL 생성
+     */
+    public List<CreatePresignedUrlResponse> createPresignedUrls(Long memberId, List<String> fileNames) {
+        return fileNames.stream()
+                .map(fileName -> {
+                    String keyName = getKeyName(memberId, fileName);
+                    PutObjectPresignRequest presignRequest = getPutObjectPresignRequest(keyName);
+                    PresignedPutObjectRequest presignedRequest = s3Presigner.presignPutObject(presignRequest);
+                    return getCreatePresignedUrlResponse(keyName, presignedRequest);
+                })
+                .toList();
     }
 }
