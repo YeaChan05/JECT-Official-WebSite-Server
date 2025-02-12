@@ -7,44 +7,30 @@ import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import io.awspring.cloud.dynamodb.DynamoDbTemplate;
-import java.net.URI;
 import org.ject.support.external.dynamodb.repository.DynamoDbRepository;
 import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRepositories;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
+import java.net.URI;
+
 @Configuration
 @EnableDynamoDBRepositories(basePackageClasses = DynamoDbRepository.class)
-public class AwsDynamoDbConfig {
-
-    @Value("${aws.access-key}")
-    private String accessKey;
-
-    @Value("${aws.secret-key}")
-    private String secretKey;
-
-    @Value("${aws.region}")
-    private String region;
+public class DynamoDbConfig {
 
     @Value("${aws.dynamodb.endpoint}")
     private String dynamoDbEndpoint;
 
     @Bean
-    public AwsCredentials awsCredentials() {
-        return AwsBasicCredentials.create(accessKey, secretKey);
-    }
-
-    @Bean
-    public DynamoDbClient dynamoDbClient(AwsCredentials awsCredentials) {
+    public DynamoDbClient dynamoDbClient(AwsCredentials awsCredentials, Region region) {
         return DynamoDbClient.builder()
-                .region(Region.of(region.toUpperCase().replace("-", "_")))
+                .region(region)
                 .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
                 .endpointOverride(URI.create(dynamoDbEndpoint))
                 .build();
@@ -63,13 +49,18 @@ public class AwsDynamoDbConfig {
     }
 
     @Bean
-    public AmazonDynamoDB amazonDynamoDB() {
+    public AmazonDynamoDB amazonDynamoDB(AwsCredentials awsCredentials, Region region) {
         return AmazonDynamoDBClient.builder()
                 .withEndpointConfiguration(
-                        new AwsClientBuilder.EndpointConfiguration(dynamoDbEndpoint, region)
+                        new AwsClientBuilder.EndpointConfiguration(dynamoDbEndpoint, region.id())
                 )
                 .withCredentials(
-                        new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey))
+                        new AWSStaticCredentialsProvider(
+                                new BasicAWSCredentials(
+                                        awsCredentials.accessKeyId(),
+                                        awsCredentials.secretAccessKey()
+                                )
+                        )
                 )
                 .withClientConfiguration(new ClientConfiguration())
                 .build();
