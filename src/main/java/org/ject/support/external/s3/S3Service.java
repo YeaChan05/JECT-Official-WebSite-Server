@@ -29,7 +29,7 @@ public class S3Service {
      * 사용자가 첨부한 파일 이름과 해당 사용자의 식별자를 토대로 Pre-signed URL 생성
      */
     public CreatePresignedUrlResponse createPresignedUrl(Long memberId, String fileName) {
-        String uniqueFileName = String.format("%s_%s", UUID.randomUUID(), fileName);
+        String uniqueFileName = String.format("%s_%s", fileName, UUID.randomUUID());
         String keyName = String.format("%s/%s", memberId, uniqueFileName);
 
         PutObjectPresignRequest presignRequest = createPutObjectPresignRequest(keyName);
