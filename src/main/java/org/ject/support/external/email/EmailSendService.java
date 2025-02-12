@@ -1,7 +1,9 @@
 package org.ject.support.external.email;
 
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.ject.support.common.util.Json2MapSerializer;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -12,13 +14,13 @@ import org.springframework.stereotype.Service;
 public class EmailSendService {
     private final JavaMailSender mailSender;
     private final MessageGenerator messageGenerator;
+    private final Json2MapSerializer json2MapSerializer;
 
     /**
      * 단건 email 전송
      */
-    public void sendEmail(String to, EmailTemplate template, MailParameter parameter) {
-        MimeMessagePreparator preparator = messageGenerator.generateMessagePreparator(to, template,
-                parameter.getParam());
+    public void sendEmail(String to, EmailTemplate template, Map<String,String> parameter) {
+        MimeMessagePreparator preparator = messageGenerator.generateMessagePreparator(to, template, parameter);
         sendMail(preparator);
     }
 
@@ -27,7 +29,7 @@ public class EmailSendService {
      */
     public void sendEmailBulk(List<MailSendRequest> requests) {
         MimeMessagePreparator[] preparators = requests.stream()
-                .map(request -> messageGenerator.generateMessagePreparator(request.to, request.template, request.parameter.getParam()))
+                .map(request -> messageGenerator.generateMessagePreparator(request.to, request.template, json2MapSerializer.serializeAsMap(request.parameter)))
                 .toArray(MimeMessagePreparator[]::new);
         sendMail(preparators);
     }
@@ -43,7 +45,7 @@ public class EmailSendService {
     public record MailSendRequest(
             String to,
             EmailTemplate template,
-            MailParameter parameter
+            Map<String,String> parameter
     ) {
     }
 }
