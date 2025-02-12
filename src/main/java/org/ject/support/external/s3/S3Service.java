@@ -36,6 +36,20 @@ public class S3Service {
         return getCreatePresignedUrlResponse(keyName, presignedRequest);
     }
 
+    /**
+     * 여러 개의 Pre-signed URL 생성
+     */
+    public List<CreatePresignedUrlResponse> createPresignedUrls(Long memberId, List<String> fileNames) {
+        return fileNames.stream()
+                .map(fileName -> {
+                    String keyName = getKeyName(memberId, fileName);
+                    PutObjectPresignRequest presignRequest = getPutObjectPresignRequest(keyName);
+                    PresignedPutObjectRequest presignedRequest = s3Presigner.presignPutObject(presignRequest);
+                    return getCreatePresignedUrlResponse(keyName, presignedRequest);
+                })
+                .toList();
+    }
+
     private String getKeyName(Long memberId, String fileName) {
         String uniqueFileName = String.format("%s_%s", fileName, UUID.randomUUID());
         return String.format("%s/%s", memberId, uniqueFileName);
@@ -60,19 +74,5 @@ public class S3Service {
                 keyName,
                 presignedRequest.url().toExternalForm(),
                 LocalDateTime.ofInstant(presignedRequest.expiration(), ZoneId.systemDefault()));
-    }
-
-    /**
-     * 여러 개의 Pre-signed URL 생성
-     */
-    public List<CreatePresignedUrlResponse> createPresignedUrls(Long memberId, List<String> fileNames) {
-        return fileNames.stream()
-                .map(fileName -> {
-                    String keyName = getKeyName(memberId, fileName);
-                    PutObjectPresignRequest presignRequest = getPutObjectPresignRequest(keyName);
-                    PresignedPutObjectRequest presignedRequest = s3Presigner.presignPutObject(presignRequest);
-                    return getCreatePresignedUrlResponse(keyName, presignedRequest);
-                })
-                .toList();
     }
 }
