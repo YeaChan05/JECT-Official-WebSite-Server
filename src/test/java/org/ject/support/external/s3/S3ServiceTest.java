@@ -1,6 +1,7 @@
 package org.ject.support.external.s3;
 
 import org.ject.support.domain.file.dto.CreatePresignedUrlResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,29 +30,63 @@ class S3ServiceTest {
     @InjectMocks
     private S3Service s3Service;
 
+    private TestParameter testParameter;
+
+    @BeforeEach
+    void setUp() throws MalformedURLException {
+        testParameter = new TestParameter(123L, "test.pdf", Instant.now().plusSeconds(600));
+        PresignedPutObjectRequest mockRequest = mock(PresignedPutObjectRequest.class);
+        when(mockRequest.url()).thenReturn(URI.create(testParameter.expectedUrl).toURL());
+        when(mockRequest.expiration()).thenReturn(testParameter.expirationTime);
+        when(s3Presigner.presignPutObject((PutObjectPresignRequest) any())).thenReturn(mockRequest);
+    }
+
     @Test
     @DisplayName("create pre-signed url")
-    void create_presigned_url() throws MalformedURLException {
-        // given
-        Long memberId = 123L;
-        String fileName = "test.pdf";
-        String expectedKeyName = String.format("%s/%s", memberId, "uuid_test.pdf");
-        String expectedUrl = String.format("%s%s", "https://s3.test.com/", expectedKeyName);
-        Instant expirationTime = Instant.now().plusSeconds(600);
-
-        PresignedPutObjectRequest mockRequest = mock(PresignedPutObjectRequest.class);
-        when(mockRequest.url()).thenReturn(URI.create(expectedUrl).toURL());
-        when(mockRequest.expiration()).thenReturn(expirationTime);
-
-        when(s3Presigner.presignPutObject((PutObjectPresignRequest) any())).thenReturn(mockRequest);
-
+    void create_presigned_url() {
         // when
-        CreatePresignedUrlResponse response = s3Service.createPresignedUrl(memberId, fileName);
+        CreatePresignedUrlResponse response =
+                s3Service.createPresignedUrl(testParameter.memberId, testParameter.fileName);
 
         // then
-        assertThat(response.keyName()).contains(fileName);
-        assertThat(response.presignedUrl()).contains(expectedUrl);
-        assertThat(response.presignedUrl()).isEqualTo(expectedUrl);
-        assertThat(response.expiration()).isEqualTo(LocalDateTime.ofInstant(expirationTime, ZoneId.systemDefault()));
+        assertThat(response.keyName()).contains(testParameter.fileName);
+        assertThat(response.presignedUrl()).contains(testParameter.expectedUrl);
+        assertThat(response.presignedUrl()).isEqualTo(testParameter.expectedUrl);
+        assertThat(response.expiration())
+                .isEqualTo(LocalDateTime.ofInstant(testParameter.expirationTime, ZoneId.systemDefault()));
+    }
+
+    @Test
+    @DisplayName("create key name")
+    void create_key_name() {
+        // when
+        CreatePresignedUrlResponse response =
+                s3Service.createPresignedUrl(testParameter.memberId, testParameter.fileName);
+
+        // then
+        assertThat(response.keyName()).contains(testParameter.memberId.toString());
+        assertThat(removePrefix(response.keyName())).startsWith(testParameter.fileName);
+        assertThat(response.keyName()).contains("_");
+    }
+
+    private String removePrefix(String keyName) {
+        String prefix = String.format("%s/", testParameter.memberId);
+        return keyName.replace(prefix, "");
+    }
+
+    static class TestParameter {
+        Long memberId;
+        String fileName;
+        Instant expirationTime;
+        String expectedKeyName;
+        String expectedUrl;
+
+        public TestParameter(Long memberId, String fileName, Instant expirationTime) {
+            this.memberId = memberId;
+            this.fileName = fileName;
+            this.expectedKeyName = String.format("%s/%s", memberId, "test.pdf_uuid");
+            this.expectedUrl = String.format("%s%s", "https://s3.test.com/", expectedKeyName);
+            this.expirationTime = expirationTime;
+        }
     }
 }
