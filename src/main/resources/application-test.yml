@@ -28,6 +28,8 @@ aws:
   region: ap-northeast-2
   s3:
     bucket: bucket
+  dynamodb:
+    endpoint: http://localhost:8000
 
 decorator:
   datasource:
