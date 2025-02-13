@@ -38,7 +38,7 @@ aws:
   s3:
     bucket: bucket
   dynamodb:
-    endpoint: http://localhost:9000
+    endpoint: http://localhost:8000
 
 decorator:
   datasource:
