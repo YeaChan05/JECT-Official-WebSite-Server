@@ -14,6 +14,9 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
 
+    /**
+     * 주어진 기수의 프로젝트를 모두 조회합니다.
+     */
     public List<ProjectResponse> findProjectsBySemester(String semester) {
         return projectRepository.findProjectsBySemester(semester)
                 .stream()
