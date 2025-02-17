@@ -4,13 +4,17 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-
+        dialect: org.hibernate.dialect.H2Dialect
   datasource:
-    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-    url: jdbc:tc:mysql:8.2:///
-    username: root
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test
+    username: sa
     password: 1234
+#  datasource:
+#    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+#    url: jdbc:tc:mysql:8.2:///
+#    username: root
+#    password: 1234
 
   data:
     redis:
