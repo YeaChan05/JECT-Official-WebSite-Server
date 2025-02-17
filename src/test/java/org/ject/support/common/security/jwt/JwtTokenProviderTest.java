@@ -46,8 +46,6 @@ class JwtTokenProviderTest {
         jwtCookieProvider = new JwtCookieProvider();
         ReflectionTestUtils.setField(jwtTokenProvider, "accessExpirationTime", 3600000L); // 1시간
         ReflectionTestUtils.setField(jwtTokenProvider, "refreshExpirationTime", 1209600000L); // 2주
-        ReflectionTestUtils.setField(jwtCookieProvider, "accessExpirationTime", 3600000L); // 1시간
-        ReflectionTestUtils.setField(jwtCookieProvider, "refreshExpirationTime", 1209600000L); // 2주
 
         testMember = Member.builder()
                 .id(1L)
