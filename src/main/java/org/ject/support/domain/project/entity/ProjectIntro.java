@@ -1,4 +1,4 @@
-package org.ject.support.domain.project;
+package org.ject.support.domain.project.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
