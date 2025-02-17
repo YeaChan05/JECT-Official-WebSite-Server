@@ -1,0 +1,76 @@
+package org.ject.support.domain.auth;
+
+
+import static org.ject.support.domain.auth.AuthErrorCode.INVALID_AUTH_CODE;
+import static org.ject.support.domain.auth.AuthErrorCode.NOT_FOUND_AUTH_CODE;
+
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.ject.support.common.security.jwt.JwtCookieProvider;
+import org.ject.support.common.security.jwt.JwtTokenProvider;
+import org.ject.support.domain.auth.AuthDto.AuthCodeResponse;
+import org.ject.support.domain.member.Member;
+import org.ject.support.domain.member.MemberDto.TempMemberJoinRequest;
+import org.ject.support.domain.member.MemberRepository;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class AuthService {
+
+    private final RedisTemplate<String, String> redisTemplate;
+    private final MemberRepository memberRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtCookieProvider jwtCookieProvider;
+
+    public AuthCodeResponse verifyEmailByAuthCode(HttpServletResponse response, String name, String email,
+                                                  String phoneNumber, String userInputCode) {
+        verifyAuthCode(email, userInputCode);
+
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        if (member == null) {
+            member = createTempMember(name, email, phoneNumber);
+        }
+
+        Authentication authentication = jwtTokenProvider.createAuthenticationByMember(member);
+        String accessToken = jwtTokenProvider.createAccessToken(authentication, member.getId());
+        String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
+
+        addCookie(response, accessToken, refreshToken);
+
+        // TODO: 개발 시에만 json으로 토큰 반환. 추후 HTTPS 적용 및 실제 운영시에는 쿠키로만 전달 예정 (보안 이슈)
+        return new AuthCodeResponse(accessToken, refreshToken);
+    }
+
+    private Member createTempMember(String name,  String email, String phoneNumber) {
+        Member member = TempMemberJoinRequest.toEntity(name, email, phoneNumber);
+        return memberRepository.save(member);
+    }
+
+
+    // 쿠키 추가 메서드
+    private void addCookie(HttpServletResponse response, String accessToken, String refreshToken) {
+        response.addCookie(jwtCookieProvider.createAccessCookie(accessToken));
+        response.addCookie(jwtCookieProvider.createRefreshCookie(refreshToken));
+    }
+
+    public void verifyAuthCode(String key, String userInputCode) {
+        // redis에서 키 값으로 인증 번호 조회
+        String redisCode = redisTemplate.opsForValue().get(key);
+
+        // Redis에서 코드가 없는 경우
+        if (redisCode == null) {
+            throw new AuthException(NOT_FOUND_AUTH_CODE);
+        }
+
+        // 코드 불일치
+        if (!userInputCode.equals(redisCode)) {
+            throw new AuthException(INVALID_AUTH_CODE);
+        }
+
+        // 인증 성공
+        redisTemplate.delete(key);
+    }
+}
