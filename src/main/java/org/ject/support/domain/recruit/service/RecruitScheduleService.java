@@ -46,7 +46,6 @@ public class RecruitScheduleService {
 
     private Recruit getRecruit(final RecruitOpenedEvent event) {
         Long recruitId = event.recruitId();
-        //TODO 2025 02 18 15:01:46 : custom exception
         return recruitRepository.findById(recruitId)
                 .orElseThrow(() -> new RecruitException(RecruitErrorCode.NOT_FOUND));
     }
