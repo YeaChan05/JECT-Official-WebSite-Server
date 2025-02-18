@@ -23,7 +23,7 @@ public class AccessPeriodInitializer implements ApplicationRunner {
     @Override
     public void run(final ApplicationArguments args) {
         if (Boolean.FALSE.equals(redisTemplate.hasKey(Constants.PERIOD_FLAG))) {// flag가 저장되어있지 않으면
-            recruitRepository.findByStartDateAfterAndAndEndDateBefore(LocalDateTime.now())
+            recruitRepository.findByStartDateAfterAndEndDateBefore(LocalDateTime.now())
                             .ifPresent(this::setRecruitFlag);
 
         }
