@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.ject.support.domain.recruit.domain.Recruit;
 import org.ject.support.domain.recruit.dto.Constants;
 import org.ject.support.domain.recruit.dto.RecruitOpenedEvent;
+import org.ject.support.domain.recruit.exception.RecruitErrorCode;
+import org.ject.support.domain.recruit.exception.RecruitException;
 import org.ject.support.domain.recruit.repository.RecruitRepository;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.TaskScheduler;
@@ -44,8 +46,8 @@ public class RecruitScheduleService {
 
     private Recruit getRecruit(final RecruitOpenedEvent event) {
         Long recruitId = event.recruitId();
-        Recruit recruit = recruitRepository.findById(recruitId)
-                .orElseThrow(() -> new RuntimeException());//TODO 2025 02 18 15:01:46 : custom exception
-        return recruit;
+        //TODO 2025 02 18 15:01:46 : custom exception
+        return recruitRepository.findById(recruitId)
+                .orElseThrow(() -> new RecruitException(RecruitErrorCode.NOT_FOUND));
     }
 }
