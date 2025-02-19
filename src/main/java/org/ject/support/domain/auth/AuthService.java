@@ -56,9 +56,9 @@ public class AuthService {
         response.addCookie(jwtCookieProvider.createRefreshCookie(refreshToken));
     }
 
-    public void verifyAuthCode(String key, String userInputCode) {
+    public void verifyAuthCode(String email, String userInputCode) {
         // redis에서 키 값으로 인증 번호 조회
-        String redisCode = redisTemplate.opsForValue().get(key);
+        String redisCode = redisTemplate.opsForValue().get(email);
 
         // Redis에서 코드가 없는 경우
         if (redisCode == null) {
@@ -71,6 +71,6 @@ public class AuthService {
         }
 
         // 인증 성공
-        redisTemplate.delete(key);
+        redisTemplate.delete(email);
     }
 }
