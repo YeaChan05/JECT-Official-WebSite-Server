@@ -11,9 +11,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
-import org.ject.support.common.security.jwt.JwtCookieProvider;
 import org.ject.support.common.security.jwt.JwtTokenProvider;
 import org.ject.support.domain.auth.AuthDto.AuthCodeResponse;
 import org.ject.support.domain.member.Member;
@@ -43,10 +41,6 @@ class AuthServiceTest {
 
     @Mock
     private JwtTokenProvider jwtTokenProvider;
-
-    @Mock
-    private JwtCookieProvider jwtCookieProvider; // AuthService 내부에서 사용됨
-
     @Mock
     private ValueOperations<String, String> valueOperations;
 
@@ -66,7 +60,6 @@ class AuthServiceTest {
     @DisplayName("이메일 인증 코드 검증 성공 - 신규 회원")
     void verifyEmailByAuthCode_NewMember_Success() {
         // given
-        HttpServletResponse response = mock(HttpServletResponse.class);
         Authentication authentication = mock(Authentication.class);
         Member newMember = Member.builder()
                 .name(TEST_NAME)
@@ -82,22 +75,19 @@ class AuthServiceTest {
         given(jwtTokenProvider.createRefreshToken(any())).willReturn(TEST_REFRESH_TOKEN);
 
         // when
-        AuthCodeResponse result = authService.verifyEmailByAuthCode(response, TEST_NAME, TEST_EMAIL,
+        AuthCodeResponse result = authService.verifyEmailByAuthCode(TEST_NAME, TEST_EMAIL,
                 TEST_PHONE_NUMBER, TEST_AUTH_CODE);
 
         // then
-        assertThat(result.getAccessToken()).isEqualTo(TEST_ACCESS_TOKEN);
-        assertThat(result.getRefreshToken()).isEqualTo(TEST_REFRESH_TOKEN);
+        assertThat(result.accessToken()).isEqualTo(TEST_ACCESS_TOKEN);
+        assertThat(result.refreshToken()).isEqualTo(TEST_REFRESH_TOKEN);
         verify(redisTemplate).delete(TEST_EMAIL);
-        verify(jwtCookieProvider).createAccessCookie(TEST_ACCESS_TOKEN);
-        verify(jwtCookieProvider).createRefreshCookie(TEST_REFRESH_TOKEN);
     }
 
     @Test
     @DisplayName("이메일 인증 코드 검증 성공 - 기존 회원")
     void verifyEmailByAuthCode_ExistingMember_Success() {
         // given
-        HttpServletResponse response = mock(HttpServletResponse.class);
         Authentication authentication = mock(Authentication.class);
         Member existingMember = Member.builder()
             .email(TEST_EMAIL)
@@ -110,11 +100,11 @@ class AuthServiceTest {
         given(jwtTokenProvider.createRefreshToken(any())).willReturn(TEST_REFRESH_TOKEN);
 
         // when
-        AuthCodeResponse result = authService.verifyEmailByAuthCode(response, TEST_NAME, TEST_EMAIL,
+        AuthCodeResponse result = authService.verifyEmailByAuthCode(TEST_NAME, TEST_EMAIL,
                 TEST_PHONE_NUMBER, TEST_AUTH_CODE);
         // then
-        assertThat(result.getAccessToken()).isEqualTo(TEST_ACCESS_TOKEN);
-        assertThat(result.getRefreshToken()).isEqualTo(TEST_REFRESH_TOKEN);
+        assertThat(result.accessToken()).isEqualTo(TEST_ACCESS_TOKEN);
+        assertThat(result.refreshToken()).isEqualTo(TEST_REFRESH_TOKEN);
         verify(redisTemplate).delete(TEST_EMAIL);
     }
 
