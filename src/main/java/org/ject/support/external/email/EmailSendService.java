@@ -1,9 +1,9 @@
 package org.ject.support.external.email;
 
+import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ject.support.common.util.Json2MapSerializer;
@@ -20,7 +20,7 @@ public class EmailSendService {
     private final MessageGenerator messageGenerator;
     private final Json2MapSerializer json2MapSerializer;
     private final RedisTemplate<String, String> redisTemplate;
-    private final Random random = new Random();
+    private final SecureRandom random = new SecureRandom();
 
     // 인증 번호 만료 시간 (초)
     private static final long EXPIRE_TIME = 305;
