@@ -16,7 +16,7 @@ public class EmailController {
 
     private final EmailSendService emailSendService;
 
-    @PostMapping("/send-auth-email")
+    @PostMapping("/send/auth")
     public void sendAuthEmail(@RequestBody SendEmailRequest sendEmailRequest) {
         emailSendService.sendAuthCodeEmail(sendEmailRequest.getEmail());
     }

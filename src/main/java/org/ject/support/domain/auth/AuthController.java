@@ -16,7 +16,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/verify-auth-code")
+    @PostMapping("/code")
     public AuthCodeResponse verifyAuthCode(HttpServletResponse response,
                                            @RequestBody VerifyAuthCodeRequest request) {
         return authService.verifyEmailByAuthCode(response, request.getName(), request.getEmail(),
