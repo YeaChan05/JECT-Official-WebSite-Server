@@ -21,11 +21,11 @@ public class AuthController {
     @PostMapping("/code")
     public AuthCodeResponse verifyAuthCode(HttpServletResponse response,
                                            @RequestBody VerifyAuthCodeRequest request) {
-        AuthCodeResponse authResponse = authService.verifyEmailByAuthCode(request.getName(), request.getEmail(),
-                request.getPhoneNumber(), request.getAuthCode());
+        AuthCodeResponse authResponse = authService.verifyEmailByAuthCode(request.name(), request.email(),
+                request.phoneNumber(), request.authCode());
 
-        response.addCookie(jwtCookieProvider.createAccessCookie(authResponse.getAccessToken()));
-        response.addCookie(jwtCookieProvider.createRefreshCookie(authResponse.getRefreshToken()));
+        response.addCookie(jwtCookieProvider.createAccessCookie(authResponse.accessToken()));
+        response.addCookie(jwtCookieProvider.createRefreshCookie(authResponse.refreshToken()));
 
         return authResponse;
     }
