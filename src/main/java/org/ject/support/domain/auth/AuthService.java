@@ -25,7 +25,7 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtCookieProvider jwtCookieProvider;
 
-    public AuthCodeResponse verifyEmailByAuthCode(HttpServletResponse response, String name, String email,
+    public AuthCodeResponse verifyEmailByAuthCode(String name, String email,
                                                   String phoneNumber, String userInputCode) {
         verifyAuthCode(email, userInputCode);
 
@@ -38,9 +38,6 @@ public class AuthService {
         String accessToken = jwtTokenProvider.createAccessToken(authentication, member.getId());
         String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
 
-        addCookie(response, accessToken, refreshToken);
-
-        // TODO: 개발 시에만 json으로 토큰 반환. 추후 HTTPS 적용 및 실제 운영시에는 쿠키로만 전달 예정 (보안 이슈)
         return new AuthCodeResponse(accessToken, refreshToken);
     }
 
