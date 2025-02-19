@@ -23,7 +23,6 @@ public class AuthService {
     private final RedisTemplate<String, String> redisTemplate;
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
-    private final JwtCookieProvider jwtCookieProvider;
 
     public AuthCodeResponse verifyEmailByAuthCode(String name, String email,
                                                   String phoneNumber, String userInputCode) {
@@ -44,13 +43,6 @@ public class AuthService {
     private Member createTempMember(String name,  String email, String phoneNumber) {
         Member member = TempMemberJoinRequest.toEntity(name, email, phoneNumber);
         return memberRepository.save(member);
-    }
-
-
-    // 쿠키 추가 메서드
-    private void addCookie(HttpServletResponse response, String accessToken, String refreshToken) {
-        response.addCookie(jwtCookieProvider.createAccessCookie(accessToken));
-        response.addCookie(jwtCookieProvider.createRefreshCookie(refreshToken));
     }
 
     public void verifyAuthCode(String email, String userInputCode) {
