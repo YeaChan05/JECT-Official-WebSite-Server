@@ -12,10 +12,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EmailController {
 
-    private final EmailSendService emailSendService;
+    private final EmailAuthService authEmailService;
 
     @PostMapping("/send/auth")
     public void sendAuthEmail(@RequestParam String email) {
-        emailSendService.sendAuthCodeEmail(email);
+        authEmailService.sendAuthCode(email);
     }
 }
