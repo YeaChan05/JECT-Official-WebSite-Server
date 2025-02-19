@@ -48,7 +48,7 @@ public class EmailSendService {
         try {
             mailSender.send(preparators);
         } catch (org.springframework.mail.MailException e) {
-            throw new MailException(MailErrorCode.MAIL_SEND_FAILURE);
+            throw new MailSendException(MailErrorCode.MAIL_SEND_FAILURE);
         }
     }
 
