@@ -1,16 +1,11 @@
 package org.ject.support.common.security;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-
 import java.util.Optional;
 import org.ject.support.domain.member.JobFamily;
-import org.ject.support.domain.member.Member;
-import org.ject.support.domain.member.MemberException;
-import org.ject.support.domain.member.MemberRepository;
 import org.ject.support.domain.member.Role;
+import org.ject.support.domain.member.entity.Member;
+import org.ject.support.domain.member.exception.MemberException;
+import org.ject.support.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +13,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CustomUserDetailServiceTest {

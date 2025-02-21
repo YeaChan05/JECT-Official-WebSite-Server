@@ -1,16 +1,13 @@
 package org.ject.support.common.security.jwt;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.ject.support.common.exception.GlobalErrorCode.AUTHENTICATION_REQUIRED;
-
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.ject.support.common.exception.GlobalException;
 import org.ject.support.common.security.CustomUserDetailService;
 import org.ject.support.common.security.CustomUserDetails;
 import org.ject.support.domain.member.JobFamily;
-import org.ject.support.domain.member.Member;
 import org.ject.support.domain.member.Role;
+import org.ject.support.domain.member.entity.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,8 +18,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.ject.support.common.exception.GlobalErrorCode.AUTHENTICATION_REQUIRED;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class JwtTokenProviderTest {
