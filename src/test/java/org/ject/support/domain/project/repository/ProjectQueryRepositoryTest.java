@@ -47,7 +47,7 @@ class ProjectQueryRepositoryTest {
         projectRepository.saveAll(List.of(project1, project2, project3));
 
         // when
-        Page<ProjectResponse> result = projectRepository.findProjectsBySemester("1기", PageRequest.of(0, 20));
+        Page<ProjectResponse> result = projectRepository.findProjectsBySemester("1기", PageRequest.of(0, 30));
 
         // then
         assertThat(result).isNotNull();
