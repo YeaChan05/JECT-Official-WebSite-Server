@@ -1,29 +1,25 @@
 package org.ject.support.domain.project.repository;
 
-import org.ject.support.domain.member.Team;
-import org.ject.support.domain.member.TeamRepository;
+import java.time.LocalDate;
+import java.util.List;
+import org.ject.support.domain.member.entity.Team;
+import org.ject.support.domain.member.repository.TeamRepository;
 import org.ject.support.domain.project.dto.ProjectResponse;
 import org.ject.support.domain.project.entity.Project;
+import org.ject.support.testconfig.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.ject.support.testconfig.IntegrationTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @IntegrationTest
 @Transactional
 class ProjectQueryRepositoryTest {
-
-    @Autowired
-    private ProjectQueryRepository projectQueryRepository;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -51,7 +47,7 @@ class ProjectQueryRepositoryTest {
         projectRepository.saveAll(List.of(project1, project2, project3));
 
         // when
-        Page<ProjectResponse> result = projectQueryRepository.findProjectsBySemester("1기", PageRequest.of(0, 20));
+        Page<ProjectResponse> result = projectRepository.findProjectsBySemester("1기", PageRequest.of(0, 20));
 
         // then
         assertThat(result).isNotNull();
