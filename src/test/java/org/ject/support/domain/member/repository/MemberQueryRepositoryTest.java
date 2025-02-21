@@ -22,7 +22,7 @@ import static org.ject.support.domain.member.JobFamily.PD;
 
 @Import(QueryDslTestConfig.class)
 @DataJpaTest
-class MemberRepositoryTest {
+class MemberQueryRepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;
