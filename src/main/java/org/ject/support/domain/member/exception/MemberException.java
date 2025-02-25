@@ -1,4 +1,4 @@
-package org.ject.support.domain.member;
+package org.ject.support.domain.member.exception;
 
 import org.ject.support.common.exception.BusinessException;
 import org.ject.support.common.exception.ErrorCode;
