@@ -1,6 +1,10 @@
-package org.ject.support.domain.review;
+package org.ject.support.domain.review.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.ject.support.domain.base.BaseTimeEntity;
@@ -15,4 +19,10 @@ public class Review extends BaseTimeEntity {
 
     @Column(length = 2083)
     private String linkUrl;
+
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private String description;
 }
