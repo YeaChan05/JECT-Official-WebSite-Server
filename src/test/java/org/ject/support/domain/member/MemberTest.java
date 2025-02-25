@@ -1,9 +1,10 @@
 package org.ject.support.domain.member;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
+import org.ject.support.domain.member.entity.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MemberTest {
 
@@ -20,13 +21,13 @@ class MemberTest {
 
         // when
         Member member = Member.builder()
-            .name(name)
-            .phoneNumber(phoneNumber)
-            .email(email)
-            .semester(semester)
-            .jobFamily(jobFamily)
-            .role(role)
-            .build();
+                .name(name)
+                .phoneNumber(phoneNumber)
+                .email(email)
+                .semester(semester)
+                .jobFamily(jobFamily)
+                .role(role)
+                .build();
 
         // then
         assertThat(member.getName()).isEqualTo(name);
@@ -48,11 +49,11 @@ class MemberTest {
 
         // when
         Member member = Member.builder()
-            .name(name)
-            .phoneNumber(phoneNumber)
-            .email(email)
-            .role(role)
-            .build();
+                .name(name)
+                .phoneNumber(phoneNumber)
+                .email(email)
+                .role(role)
+                .build();
 
         // then
         assertThat(member.getName()).isEqualTo(name);
