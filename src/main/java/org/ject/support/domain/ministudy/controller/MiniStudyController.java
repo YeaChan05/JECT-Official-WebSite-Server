@@ -18,7 +18,7 @@ public class MiniStudyController {
     private final MiniStudyService miniStudyService;
 
     @GetMapping
-    public Page<MiniStudyResponse> findMiniStudies(@PageableDefault(size = 30) Pageable pageable) {
+    public Page<MiniStudyResponse> findMiniStudies(@PageableDefault(size = 12) Pageable pageable) {
         return miniStudyService.findMiniStudies(pageable);
     }
 }
