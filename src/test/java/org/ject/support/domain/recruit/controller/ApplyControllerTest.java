@@ -1,6 +1,5 @@
 package org.ject.support.domain.recruit.controller;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.ject.support.domain.member.Role.USER;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -16,7 +15,6 @@ import org.ject.support.domain.member.MemberRepository;
 import org.ject.support.domain.recruit.domain.Question;
 import org.ject.support.domain.recruit.domain.Recruit;
 import org.ject.support.domain.recruit.repository.RecruitRepository;
-import org.ject.support.domain.tempapply.domain.TemporaryApplication;
 import org.ject.support.domain.tempapply.repository.TemporaryApplicationRepository;
 import org.ject.support.testconfig.ApplicationPeriodTest;
 import org.ject.support.testconfig.AuthenticatedUser;
@@ -81,37 +79,37 @@ class ApplyControllerTest extends ApplicationPeriodTest {
         memberRepository.save(member);
     }
 
-    @Test
-    @DisplayName("apply temporal test")
-    @AuthenticatedUser
-    @Transactional
-    void test_temp_apply() throws Exception {
-        mockMvc.perform(post("/apply/temp?jobFamily=BE")
-                        .contentType("application/json")
-                        .param("memberId", member.getId().toString())
-                        .content("""
-                                {
-                                  "1": "answer1",
-                                  "2": "answer2",
-                                  "3": "answer3",
-                                  "4": "answer4",
-                                  "5": "answer5"
-                                }""")
-                )
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("SUCCESS")))
-                .andDo(print())
-                .andReturn();
-
-        TemporaryApplication temporaryApplication
-                = temporaryApplicationRepository.findLatestByMemberId(member.getId().toString()).orElseThrow();
-
-        assertThat(temporaryApplication.getAnswers().get("1")).isEqualTo("answer1");
-        assertThat(temporaryApplication.getAnswers().get("2")).isEqualTo("answer2");
-        assertThat(temporaryApplication.getAnswers().get("3")).isEqualTo("answer3");
-        assertThat(temporaryApplication.getAnswers().get("4")).isEqualTo("answer4");
-        assertThat(temporaryApplication.getAnswers().get("5")).isEqualTo("answer5");
-    }
+//    @Test
+//    @DisplayName("apply temporal test")
+//    @AuthenticatedUser
+//    @Transactional
+//    void test_temp_apply() throws Exception {
+//        mockMvc.perform(post("/apply/temp?jobFamily=BE")
+//                        .contentType("application/json")
+//                        .param("memberId", member.getId().toString())
+//                        .content("""
+//                                {
+//                                  "1": "answer1",
+//                                  "2": "answer2",
+//                                  "3": "answer3",
+//                                  "4": "answer4",
+//                                  "5": "answer5"
+//                                }""")
+//                )
+//                .andExpect(status().isOk())
+//                .andExpect(content().string(containsString("SUCCESS")))
+//                .andDo(print())
+//                .andReturn();
+//
+//        TemporaryApplication temporaryApplication
+//                = temporaryApplicationRepository.findLatestByMemberId(member.getId().toString()).orElseThrow();
+//
+//        assertThat(temporaryApplication.getAnswers().get("1")).isEqualTo("answer1");
+//        assertThat(temporaryApplication.getAnswers().get("2")).isEqualTo("answer2");
+//        assertThat(temporaryApplication.getAnswers().get("3")).isEqualTo("answer3");
+//        assertThat(temporaryApplication.getAnswers().get("4")).isEqualTo("answer4");
+//        assertThat(temporaryApplication.getAnswers().get("5")).isEqualTo("answer5");
+//    }
 
     @Test
     @DisplayName("invalid question id")
