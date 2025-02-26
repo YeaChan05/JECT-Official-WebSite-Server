@@ -1,4 +1,4 @@
-package org.ject.support.domain.ministudy;
+package org.ject.support.domain.ministudy.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
