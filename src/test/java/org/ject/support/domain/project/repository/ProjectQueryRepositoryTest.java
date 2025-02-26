@@ -6,19 +6,20 @@ import org.ject.support.domain.member.entity.Team;
 import org.ject.support.domain.member.repository.TeamRepository;
 import org.ject.support.domain.project.dto.ProjectResponse;
 import org.ject.support.domain.project.entity.Project;
-import org.ject.support.testconfig.IntegrationTest;
+import org.ject.support.testconfig.QueryDslTestConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@IntegrationTest
-@Transactional
+@Import(QueryDslTestConfig.class)
+@DataJpaTest
 class ProjectQueryRepositoryTest {
 
     @Autowired
