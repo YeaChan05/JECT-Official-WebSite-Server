@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static org.ject.support.domain.ministudy.QMiniStudy.miniStudy;
+import static org.ject.support.domain.ministudy.entity.QMiniStudy.miniStudy;
 
 @Repository
 @RequiredArgsConstructor
