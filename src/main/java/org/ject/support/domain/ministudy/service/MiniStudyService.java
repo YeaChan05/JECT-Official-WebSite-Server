@@ -14,7 +14,7 @@ public class MiniStudyService {
 
     private final MiniStudyRepository miniStudyRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Page<MiniStudyResponse> findMiniStudies(Pageable pageable) {
         return miniStudyRepository.findMiniStudies(pageable);
     }
