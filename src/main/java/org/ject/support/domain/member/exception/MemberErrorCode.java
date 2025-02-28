@@ -1,4 +1,4 @@
-package org.ject.support.domain.member;
+package org.ject.support.domain.member.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
