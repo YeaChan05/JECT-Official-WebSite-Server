@@ -26,13 +26,13 @@ public class ApplyService implements ApplyUsecase {
     @PeriodAccessible
     public void applyTemporary(JobFamily jobFamily, Long memberId, Map<String, String> answers) {
         //1. jobFamily를 통해 현재 기수 지원양식 id를 가져옴
-        Recruit recruit = getPeriodRecruit();
+        Recruit recruit = getPeriodRecruit(jobFamily);
 
         //2. 지원양식과 answers의 key를 비교해 올바른 질문 양식인지 점검
         validateQuestions(answers, recruit);
 
         //3. 지원서 저장
-        temporaryApplyService.saveTemporaryApplication(jobFamily, memberId, answers);
+        temporaryApplyService.saveTemporaryApplication(memberId, answers);
     }
 
     private void validateQuestions(final Map<String, String> answers, final Recruit recruit) {
@@ -45,9 +45,10 @@ public class ApplyService implements ApplyUsecase {
     }
 
     //TODO 2025 02 20 17:07:14 : caching
-    private Recruit getPeriodRecruit() {
+    private Recruit getPeriodRecruit(final JobFamily jobFamily) {
         return recruitRepository.findActiveRecruits(LocalDate.now()).stream()
-                .findFirst()
+                .filter(recruit -> recruit.getJobFamily().equals(jobFamily))
+                .findAny()
                 .orElseThrow(() -> new RecruitException(RecruitErrorCode.NOT_FOUND));
     }
 }

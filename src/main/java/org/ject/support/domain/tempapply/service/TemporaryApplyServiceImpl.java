@@ -15,7 +15,7 @@ public class TemporaryApplyServiceImpl implements TemporaryApplyService {
     private final TemporaryApplicationRepository temporaryApplicationRepository;
 
     @Override
-    public void saveTemporaryApplication(final JobFamily jobFamily, final Long memberId,
+    public void saveTemporaryApplication(final Long memberId,
                                          final Map<String, String> answers) {
         TemporaryApplication temporaryApplication = new TemporaryApplication(memberId.toString(), answers);
         temporaryApplicationRepository.save(temporaryApplication);
