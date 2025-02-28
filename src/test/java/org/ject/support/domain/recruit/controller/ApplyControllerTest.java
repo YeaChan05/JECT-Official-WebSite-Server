@@ -10,8 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDate;
 import java.util.List;
 import org.ject.support.domain.member.JobFamily;
-import org.ject.support.domain.member.Member;
-import org.ject.support.domain.member.MemberRepository;
+import org.ject.support.domain.member.entity.Member;
+import org.ject.support.domain.member.repository.MemberRepository;
 import org.ject.support.domain.recruit.domain.Question;
 import org.ject.support.domain.recruit.domain.Recruit;
 import org.ject.support.domain.recruit.repository.RecruitRepository;
