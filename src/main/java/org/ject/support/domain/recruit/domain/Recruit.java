@@ -33,7 +33,6 @@ import org.ject.support.domain.member.JobFamily;
 public class Recruit extends BaseTimeEntity {
 
     @Id
-    @Column(name = "recruit_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
