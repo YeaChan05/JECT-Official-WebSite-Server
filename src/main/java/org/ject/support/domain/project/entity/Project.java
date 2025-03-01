@@ -1,11 +1,25 @@
 package org.ject.support.domain.project.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
-import org.ject.support.domain.base.BaseTimeEntity;
-import org.ject.support.domain.member.Team;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.ject.support.domain.base.BaseTimeEntity;
+import org.ject.support.domain.member.entity.Team;
 
 @Entity
 @Getter
@@ -43,4 +57,9 @@ public class Project extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;
+
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    @OrderBy("sequence asc")
+    @Builder.Default
+    private List<ProjectIntro> projectIntros = new ArrayList<>();
 }
