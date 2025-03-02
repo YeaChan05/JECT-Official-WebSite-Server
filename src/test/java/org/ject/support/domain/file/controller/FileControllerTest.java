@@ -13,6 +13,7 @@ import org.ject.support.domain.recruit.dto.Constants;
 import org.ject.support.domain.recruit.repository.RecruitRepository;
 import org.ject.support.testconfig.ApplicationPeriodTest;
 import org.ject.support.testconfig.IntegrationTest;
+import org.springframework.test.context.TestPropertySource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @IntegrationTest
 @AutoConfigureMockMvc
+@TestPropertySource(properties = {"spring.data.redis.repositories.enabled=false"})
 class FileControllerTest extends ApplicationPeriodTest {
     @Autowired
     private RecruitRepository recruitRepository;
