@@ -3,8 +3,8 @@ package org.ject.support.common.security;
 import java.util.ArrayList;
 import java.util.Collection;
 import lombok.Getter;
-import org.ject.support.domain.member.Member;
 import org.ject.support.domain.member.Role;
+import org.ject.support.domain.member.entity.Member;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

@@ -1,7 +1,11 @@
 package org.ject.support.common.security.jwt;
 
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.Key;
@@ -9,8 +13,8 @@ import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.ject.support.common.exception.GlobalException;
 import org.ject.support.common.security.CustomUserDetails;
-import org.ject.support.domain.member.Member;
 import org.ject.support.domain.member.Role;
+import org.ject.support.domain.member.entity.Member;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,13 +26,12 @@ import static org.ject.support.common.exception.GlobalErrorCode.AUTHENTICATION_R
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
+    private final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
     @Value("${spring.jwt.token.access-expiration-time}")
     private long accessExpirationTime;
-
     @Value("${spring.jwt.token.refresh-expiration-time}")
     private long refreshExpirationTime;
 
-    private final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
     /**
      * Access 토큰 생성
      */
@@ -76,7 +79,7 @@ public class JwtTokenProvider {
         String email = claims.getSubject();
         Long memberId = claims.get("memberId", Long.class);
         Role role = Role.valueOf(claims.get("role", String.class).toUpperCase());
-        
+
         CustomUserDetails userDetails = new CustomUserDetails(email, memberId, role);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }

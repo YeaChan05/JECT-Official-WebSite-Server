@@ -1,4 +1,4 @@
-package org.ject.support.domain.member;
+package org.ject.support.domain.member.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,6 +8,8 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.ject.support.domain.member.Role;
+import org.ject.support.domain.member.entity.Member;
 
 public class MemberDto {
 
