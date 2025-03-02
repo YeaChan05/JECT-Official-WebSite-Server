@@ -4,14 +4,12 @@ package org.ject.support.domain.auth;
 import static org.ject.support.domain.auth.AuthErrorCode.INVALID_AUTH_CODE;
 import static org.ject.support.domain.auth.AuthErrorCode.NOT_FOUND_AUTH_CODE;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.ject.support.common.security.jwt.JwtCookieProvider;
 import org.ject.support.common.security.jwt.JwtTokenProvider;
 import org.ject.support.domain.auth.AuthDto.AuthCodeResponse;
-import org.ject.support.domain.member.Member;
-import org.ject.support.domain.member.MemberDto.TempMemberJoinRequest;
-import org.ject.support.domain.member.MemberRepository;
+import org.ject.support.domain.member.dto.MemberDto.TempMemberJoinRequest;
+import org.ject.support.domain.member.entity.Member;
+import org.ject.support.domain.member.repository.MemberRepository;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
