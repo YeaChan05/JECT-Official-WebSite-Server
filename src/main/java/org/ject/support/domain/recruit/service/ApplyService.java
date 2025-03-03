@@ -1,11 +1,13 @@
 package org.ject.support.domain.recruit.service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.ject.support.common.util.PeriodAccessible;
 import org.ject.support.domain.member.JobFamily;
 import org.ject.support.domain.recruit.domain.Recruit;
+import org.ject.support.domain.recruit.dto.QuestionResponse;
 import org.ject.support.domain.recruit.exception.QuestionErrorCode;
 import org.ject.support.domain.recruit.exception.QuestionException;
 import org.ject.support.domain.recruit.exception.RecruitErrorCode;
@@ -18,9 +20,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class ApplyService implements ApplyUsecase {
+public class ApplyService implements ApplyUsecase, QuestionUsecase {
     private final TemporaryApplyService temporaryApplyService;
     private final RecruitRepository recruitRepository;
+    
+    @Override
+    public List<QuestionResponse> getQuestions(final JobFamily jobFamily) {
+        Recruit recruit = getPeriodRecruit(jobFamily);
+
+        return recruit.getQuestions()
+                .stream()
+                .map(QuestionResponse::from)
+                .toList();
+    }
 
     @Override
     @PeriodAccessible
