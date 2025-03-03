@@ -167,4 +167,43 @@ class JwtTokenProviderTest {
                 .extracting(e -> ((GlobalException) e).getErrorCode().getMessage())
                 .isEqualTo(AUTHENTICATION_REQUIRED.getMessage());
     }
+    
+    @Test
+    @DisplayName("토큰에 ROLE_ 접두사가 포함된 역할이 저장되는지 확인")
+    void createAccessToken_ShouldStoreRoleWithPrefix() {
+        // when
+        String token = jwtTokenProvider.createAccessToken(authentication, testMember.getId());
+        
+        // then
+        Authentication resultAuth = jwtTokenProvider.getAuthenticationByToken(token);
+        assertThat(resultAuth.getAuthorities()).isNotEmpty();
+        assertThat(resultAuth.getAuthorities().iterator().next().getAuthority()).isEqualTo("ROLE_USER");
+    }
+    
+    @Test
+    @DisplayName("토큰에서 ROLE_ 접두사가 있는 역할을 추출할 때 정상적으로 처리되는지 확인")
+    void getAuthenticationByToken_WithRolePrefix_ShouldHandleCorrectly() {
+        // given
+        // 테스트를 위해 ROLE_ 접두사가 있는 역할을 가진 사용자로 테스트 멤버 재설정
+        testMember = Member.builder()
+                .id(2L)
+                .email("admin@example.com")
+                .name("Admin User")
+                .phoneNumber("01098765432")
+                .role(Role.ADMIN)
+                .build();
+        
+        CustomUserDetails userDetails = new CustomUserDetails(testMember);
+        authentication = new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        
+        // when
+        String token = jwtTokenProvider.createAccessToken(authentication, testMember.getId());
+        Authentication resultAuth = jwtTokenProvider.getAuthenticationByToken(token);
+        
+        // then
+        assertThat(resultAuth).isNotNull();
+        assertThat(resultAuth.getName()).isEqualTo(testMember.getEmail());
+        assertThat(((CustomUserDetails) resultAuth.getPrincipal()).getMemberId()).isEqualTo(testMember.getId());
+        assertThat(resultAuth.getAuthorities().iterator().next().getAuthority()).isEqualTo("ROLE_ADMIN");
+    }
 }
