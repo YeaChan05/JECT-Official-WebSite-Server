@@ -2,6 +2,7 @@ package org.ject.support.domain.recruit.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.ject.support.domain.member.Role.USER;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -9,12 +10,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import org.ject.support.domain.member.JobFamily;
 import org.ject.support.domain.member.entity.Member;
 import org.ject.support.domain.member.repository.MemberRepository;
 import org.ject.support.domain.recruit.domain.Question;
 import org.ject.support.domain.recruit.domain.Recruit;
 import org.ject.support.domain.recruit.repository.RecruitRepository;
+import org.ject.support.domain.tempapply.domain.TemporaryApplication;
 import org.ject.support.domain.tempapply.repository.TemporaryApplicationRepository;
 import org.ject.support.testconfig.ApplicationPeriodTest;
 import org.ject.support.testconfig.AuthenticatedUser;
@@ -135,4 +138,29 @@ class ApplyControllerTest extends ApplicationPeriodTest {
                 .andReturn();
     }
 
+    @Test
+    @DisplayName("")
+    @AuthenticatedUser
+    void inquire_temporal_application() throws Exception {
+        // given
+temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변1", "2", "답변2"), "PM"));
+temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("3", "답변3", "4", "답변4", "5", "답변5"), "BE"));
+temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변6", "2", "답변7", "3", "답변8"), "PD"));
+temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("4", "답변9", "5", "답변10"), "FE"));
+temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변11", "2", "답변12", "3", "답변13"), "FE"));
+temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("4", "답변14", "5", "답변15"), "BE"));
+temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변16", "2", "답변17", "3", "답변18"), "PM"));
+temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("4", "답변19", "5", "답변20"), "PD"));
+temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변21", "2", "답변22", "3", "답변23"), "FE"));
+temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("3","","4", "답변24", "5", "답변25"), "BE"));
+temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변26", "2", "답변27", "3", "답변28"), "PD"));
+        // when & then
+        mockMvc.perform(get("/apply/temp?jobFamily=BE"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("SUCCESS")))
+                .andExpect(content().string(containsString("답변24")))
+                .andExpect(content().string(containsString("답변25")))
+                .andDo(print())
+                .andReturn();
+    }
 }
