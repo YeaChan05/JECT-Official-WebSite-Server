@@ -25,9 +25,12 @@ import org.ject.support.testconfig.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 @IntegrationTest
@@ -138,29 +141,38 @@ class ApplyControllerTest extends ApplicationPeriodTest {
                 .andReturn();
     }
 
-    @Test
-    @DisplayName("")
+    @ParameterizedTest(name = "jobFamily: {0}")
+    @CsvSource({
+            "BE, 답변24;답변25",
+            "PM, 답변16;답변17;답변18"
+    })
     @AuthenticatedUser
-    void inquire_temporal_application() throws Exception {
-        // given
-temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변1", "2", "답변2"), "PM"));
-temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("3", "답변3", "4", "답변4", "5", "답변5"), "BE"));
-temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변6", "2", "답변7", "3", "답변8"), "PD"));
-temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("4", "답변9", "5", "답변10"), "FE"));
-temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변11", "2", "답변12", "3", "답변13"), "FE"));
-temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("4", "답변14", "5", "답변15"), "BE"));
-temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변16", "2", "답변17", "3", "답변18"), "PM"));
-temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("4", "답변19", "5", "답변20"), "PD"));
-temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변21", "2", "답변22", "3", "답변23"), "FE"));
-temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("3","","4", "답변24", "5", "답변25"), "BE"));
-temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변26", "2", "답변27", "3", "답변28"), "PD"));
+    void inquire_temporal_application(String jobFamily, String expectedAnswersStr) throws Exception {
+        // given: 테스트 데이터 저장
+        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변1", "2", "답변2"), "PM"));
+        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("3", "답변3", "4", "답변4", "5", "답변5"), "BE"));
+        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변6", "2", "답변7", "3", "답변8"), "PD"));
+        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("4", "답변9", "5", "답변10"), "FE"));
+        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변11", "2", "답변12", "3", "답변13"), "FE"));
+        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("4", "답변14", "5", "답변15"), "BE"));
+        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변16", "2", "답변17", "3", "답변18"), "PM"));
+        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("4", "답변19", "5", "답변20"), "PD"));
+        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변21", "2", "답변22", "3", "답변23"), "FE"));
+        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("3", "", "4", "답변24", "5", "답변25"), "BE"));
+        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변26", "2", "답변27", "3", "답변28"), "PD"));
+
+        String[] expectedAnswers = expectedAnswersStr.split(";");
+
         // when & then
-        mockMvc.perform(get("/apply/temp?jobFamily=BE"))
+        ResultActions resultActions = mockMvc.perform(get("/apply/temp")
+                        .param("jobFamily", jobFamily))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("SUCCESS")))
-                .andExpect(content().string(containsString("답변24")))
-                .andExpect(content().string(containsString("답변25")))
-                .andDo(print())
-                .andReturn();
+                .andExpect(content().string(containsString("SUCCESS")));
+
+        for (String expected : expectedAnswers) {
+            resultActions.andExpect(content().string(containsString(expected)));
+        }
+
+        resultActions.andDo(print());
     }
 }
