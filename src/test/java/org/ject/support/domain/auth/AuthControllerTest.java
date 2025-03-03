@@ -9,16 +9,17 @@ import org.ject.support.common.security.jwt.JwtCookieProvider;
 import org.ject.support.domain.auth.AuthDto.AuthCodeResponse;
 import org.ject.support.domain.auth.AuthDto.VerifyAuthCodeRequest;
 import org.ject.support.testconfig.ApplicationPeriodTest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -78,7 +79,8 @@ class AuthControllerTest {
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestPropertySource(properties = {"spring.data.redis.repositories.enabled=false"})
+@TestPropertySource(properties = {"spring.data.redis.repositories.enabled=false", "server.port=0"})
+@ExtendWith(MockitoExtension.class)
 class AuthControllerIntegrationTest extends ApplicationPeriodTest {
 
     @Autowired
@@ -87,8 +89,13 @@ class AuthControllerIntegrationTest extends ApplicationPeriodTest {
     @Autowired
     private ObjectMapper objectMapper;
     
-    @MockBean
+    @Mock
     private AuthService authService;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
     
     private final String TEST_NAME = "test";
     private final String TEST_EMAIL = "test@example.com";
