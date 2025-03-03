@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.ject.support.common.security.jwt.JwtCookieProvider;
 import org.ject.support.domain.auth.AuthDto.AuthCodeResponse;
 import org.ject.support.domain.auth.AuthDto.VerifyAuthCodeRequest;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,7 @@ public class AuthController {
     private final JwtCookieProvider jwtCookieProvider;
 
     @PostMapping("/code")
+    @PreAuthorize("permitAll()")
     public AuthCodeResponse verifyAuthCode(HttpServletResponse response,
                                            @RequestBody VerifyAuthCodeRequest request) {
         AuthCodeResponse authResponse = authService.verifyEmailByAuthCode(request.name(), request.email(),
