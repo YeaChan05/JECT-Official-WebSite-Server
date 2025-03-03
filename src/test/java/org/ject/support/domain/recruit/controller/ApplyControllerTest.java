@@ -29,13 +29,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+// Redis 관련 설정을 제외하고 필요한 설정만 포함합니다
 @IntegrationTest
 @AutoConfigureMockMvc
 @Transactional
+@TestPropertySource(properties = {"spring.data.redis.repositories.enabled=false"})
 class ApplyControllerTest extends ApplicationPeriodTest {
     @Autowired
     MockMvc mockMvc;

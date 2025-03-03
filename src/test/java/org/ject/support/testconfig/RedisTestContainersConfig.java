@@ -4,6 +4,7 @@ import java.time.Duration;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -25,17 +26,33 @@ public class RedisTestContainersConfig implements DisposableBean {
             .withStartupTimeout(Duration.ofSeconds(60));
 
     static {
-        if (!redisContainer.isRunning()) {
-            redisContainer.start();
+        try {
+            if (!redisContainer.isRunning()) {
+                redisContainer.start();
+                // 컨테이너가 완전히 시작될 때까지 잠시 대기
+                Thread.sleep(1000);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Redis 컨테이너 시작 실패", e);
         }
     }
 
     @Bean
+    @Primary
     public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(
-                redisContainer.getHost(),
-                redisContainer.getMappedPort(REDIS_PORT)
-        );
+        try {
+            // 컨테이너가 실행 중인지 확인
+            if (!redisContainer.isRunning()) {
+                redisContainer.start();
+            }
+            
+            return new LettuceConnectionFactory(
+                    redisContainer.getHost(),
+                    redisContainer.getMappedPort(REDIS_PORT)
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Redis 연결 팩토리 생성 실패", e);
+        }
     }
 
     @Override
