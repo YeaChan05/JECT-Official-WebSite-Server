@@ -1,5 +1,6 @@
 package org.ject.support.external.email;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +16,7 @@ public class EmailController {
     private final EmailAuthService authEmailService;
 
     @PostMapping("/send/auth")
+    @PreAuthorize("permitAll()") // TODO: PostAuthorize 설정 추가
     public void sendAuthEmail(@RequestParam String email) {
         authEmailService.sendAuthCode(email);
     }
