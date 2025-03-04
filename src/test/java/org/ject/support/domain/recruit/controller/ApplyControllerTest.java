@@ -25,8 +25,6 @@ import org.ject.support.testconfig.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.context.TestPropertySource;
@@ -88,46 +86,35 @@ class ApplyControllerTest extends ApplicationPeriodTest {
         memberRepository.save(member);
     }
 
-//    @Test
-//    @DisplayName("apply temporal test")
-//    @AuthenticatedUser
-//    @Transactional
-//    void test_temp_apply() throws Exception {
-//        mockMvc.perform(post("/apply/temp?jobFamily=BE")
-//                        .contentType("application/json")
-//                        .param("memberId", member.getId().toString())
-//                        .content("""
-//                                {
-//                                  "1": "answer1",
-//                                  "2": "answer2",
-//                                  "3": "answer3",
-//                                  "4": "answer4",
-//                                  "5": "answer5"
-//                                }""")
-//                )
-//                .andExpect(status().isOk())
-//                .andExpect(content().string(containsString("SUCCESS")))
-//                .andDo(print())
-//                .andReturn();
-//
-//        TemporaryApplication temporaryApplication
-//                = temporaryApplicationRepository.findLatestByMemberId(member.getId().toString()).orElseThrow();
-//
-//        assertThat(temporaryApplication.getAnswers().get("1")).isEqualTo("answer1");
-//        assertThat(temporaryApplication.getAnswers().get("2")).isEqualTo("answer2");
-//        assertThat(temporaryApplication.getAnswers().get("3")).isEqualTo("answer3");
-//        assertThat(temporaryApplication.getAnswers().get("4")).isEqualTo("answer4");
-//        assertThat(temporaryApplication.getAnswers().get("5")).isEqualTo("answer5");
-//    }
+    @Test
+    @DisplayName("apply temporal test")
+    @AuthenticatedUser
+    void test_temp_apply() throws Exception {
+        mockMvc.perform(post("/apply/temp")
+                        .contentType("application/json")
+                        .param("jobFamily", "BE")
+                        .content("""
+                                {
+                                  "1": "answer1",
+                                  "2": "answer2",
+                                  "3": "answer3",
+                                  "4": "answer4",
+                                  "5": "answer5"
+                                }""")
+                )
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+    }
 
     @Test
     @DisplayName("invalid question id")
     @AuthenticatedUser
     @Transactional
     void invalid_question_id() throws Exception {
-        mockMvc.perform(post("/apply/temp?jobFamily=BE")
+        mockMvc.perform(post("/apply/temp")
                         .contentType("application/json")
-                        .param("memberId", member.getId().toString())
+                        .param("jobFamily", "BE")
                         .content("""
                                 {
                                   "1": "answer1",
@@ -144,37 +131,23 @@ class ApplyControllerTest extends ApplicationPeriodTest {
                 .andReturn();
     }
 
-    @ParameterizedTest(name = "jobFamily: {0}")
-    @CsvSource({
-            "BE, 답변24;답변25",
-            "PM, 답변16;답변17;답변18"
-    })
+    @Test
     @AuthenticatedUser
-    void inquire_temporal_application(String jobFamily, String expectedAnswersStr) throws Exception {
+    void inquire_temporal_application() throws Exception {
         // given: 테스트 데이터 저장
         temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변1", "2", "답변2"), "PM"));
-        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("3", "답변3", "4", "답변4", "5", "답변5"), "BE"));
-        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변6", "2", "답변7", "3", "답변8"), "PD"));
-        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("4", "답변9", "5", "답변10"), "FE"));
-        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변11", "2", "답변12", "3", "답변13"), "FE"));
-        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("4", "답변14", "5", "답변15"), "BE"));
-        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변16", "2", "답변17", "3", "답변18"), "PM"));
-        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("4", "답변19", "5", "답변20"), "PD"));
-        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변21", "2", "답변22", "3", "답변23"), "FE"));
-        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("3", "", "4", "답변24", "5", "답변25"), "BE"));
-        temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of("1", "답변26", "2", "답변27", "3", "답변28"), "PD"));
-
-        String[] expectedAnswers = expectedAnswersStr.split(";");
+        temporaryApplicationRepository.save(
+                new TemporaryApplication("1", Map.of("3", "답변3", "4", "답변4", "5", "답변5"), "BE"));
 
         // when & then
-        ResultActions resultActions = mockMvc.perform(get("/apply/temp")
-                        .param("jobFamily", jobFamily))
+        ResultActions resultActions = mockMvc.perform(get("/apply/temp"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("SUCCESS")));
-
-        for (String expected : expectedAnswers) {
-            resultActions.andExpect(content().string(containsString(expected)));
-        }
+                .andExpect(content().string(containsString("SUCCESS")))
+                .andExpectAll(
+                        content().string(containsString("답변3")),
+                        content().string(containsString("답변4")),
+                        content().string(containsString("답변5"))
+                );
 
         resultActions.andDo(print());
     }
