@@ -19,9 +19,8 @@ public class ApplyController {
     private final ApplyUsecase applyUsecase;
 
     @GetMapping("/temp")
-    public Map<String, String> inquireApplication(@AuthPrincipal Long memberId,
-                                                  @RequestParam JobFamily jobFamily) {
-        return applyUsecase.inquireApplication(jobFamily, memberId);
+    public Map<String, String> inquireApplication(@AuthPrincipal Long memberId) {
+        return applyUsecase.inquireApplication(memberId);
     }
 
     @PostMapping("/temp")
