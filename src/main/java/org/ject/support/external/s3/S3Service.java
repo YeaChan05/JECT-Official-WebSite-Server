@@ -32,7 +32,7 @@ public class S3Service {
      * 지원자가 첨부한 포트폴리오 파일 이름과 해당 지원자의 식별자를 토대로 Pre-signed URL 생성
      */
     @PeriodAccessible
-    public List<UploadFileResponse> uploadPortfolios(Long memberId, List<String> fileNames) { // TODO 순서 보장
+    public List<UploadFileResponse> uploadPortfolios(Long memberId, List<String> fileNames) {
         validatePortfolioExtension(fileNames);
         return createPresignedUrls(memberId, fileNames);
     }
@@ -40,7 +40,7 @@ public class S3Service {
     /**
      * USER 이상의 권한을 가진 사용자가 첨부한 파일 이름과 해당 사용자의 식별자를 토대로 Pre-signed URL 생성
      */
-    public List<UploadFileResponse> uploadContents(Long memberId, List<String> fileNames) { // TODO 순서 보장
+    public List<UploadFileResponse> uploadContents(Long memberId, List<String> fileNames) {
         return createPresignedUrls(memberId, fileNames);
     }
 
