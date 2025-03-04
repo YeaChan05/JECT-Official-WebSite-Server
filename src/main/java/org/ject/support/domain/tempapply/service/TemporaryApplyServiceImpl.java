@@ -15,10 +15,9 @@ public class TemporaryApplyServiceImpl implements TemporaryApplyService {
     private final TemporaryApplicationRepository temporaryApplicationRepository;
 
     @Override
-    public Map<String, String> findMembersRecentTemporaryApplication(final JobFamily jobFamily, final Long memberId) {
+    public Map<String, String> findMembersRecentTemporaryApplication(final Long memberId) {
         TemporaryApplication latestApplication =
                 temporaryApplicationRepository.findLatestByMemberId(memberId.toString()).stream()
-                        .filter(temporaryApplication -> temporaryApplication.isSameJobFamily(jobFamily))
                         .findFirst()
                         .orElseThrow(() -> new TemporaryApplicationException(TemporaryApplicationErrorCode.NOT_FOUND));
 
