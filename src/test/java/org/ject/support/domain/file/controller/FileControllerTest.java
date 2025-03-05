@@ -1,12 +1,5 @@
 package org.ject.support.domain.file.controller;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.ject.support.domain.member.Role.USER;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-
 import java.time.LocalDate;
 import org.ject.support.domain.member.JobFamily;
 import org.ject.support.domain.member.entity.Member;
@@ -18,20 +11,25 @@ import org.ject.support.testconfig.ApplicationPeriodTest;
 import org.ject.support.testconfig.AuthenticatedUser;
 import org.ject.support.testconfig.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
-import org.springframework.test.context.TestPropertySource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.ject.support.domain.member.Role.USER;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @IntegrationTest
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {"spring.data.redis.repositories.enabled=false"})
 class FileControllerTest extends ApplicationPeriodTest {
-    @Autowired
-    private RecruitRepository recruitRepository;
 
     @Autowired
     MockMvc mockMvc;
@@ -40,6 +38,9 @@ class FileControllerTest extends ApplicationPeriodTest {
     MemberRepository memberRepository;
 
     Member member;
+
+    @Autowired
+    private RecruitRepository recruitRepository;
 
     @BeforeEach
     void setUp() {
@@ -69,7 +70,7 @@ class FileControllerTest extends ApplicationPeriodTest {
         mockMvc.perform(post("/upload/portfolios")
                         .contentType("application/json")
                         .param("memberId", member.getId().toString())
-                        .content("[\"test1.pdf\", \"test2.pdf\"]"))
+                        .content(getContent()))
                 .andExpect(content().string(containsString("SUCCESS")))
                 .andDo(print());
     }
@@ -92,8 +93,57 @@ class FileControllerTest extends ApplicationPeriodTest {
         mockMvc.perform(post("/upload/portfolios")
                         .contentType("application/json")
                         .param("memberId", member.getId().toString())
-                        .content("[\"test1.pdf\", \"test2.pdf\"]"))
+                        .content(getContent()))
                 .andExpect(content().string(containsString("G-06")))
                 .andDo(print());
+    }
+
+    @Test
+    @DisplayName("invalid portfolio content type")
+    @AuthenticatedUser
+    @Transactional
+    void invalid_portfolio_content_type() throws Exception {
+        // given
+        recruitRepository.save(Recruit.builder()
+                .jobFamily(JobFamily.BE)
+                .semester("2021-1")
+                .startDate(LocalDate.now().plusDays(3))
+                .endDate(LocalDate.now().plusDays(5))
+                .build());
+
+        when(redisTemplate.opsForValue().get(Constants.PERIOD_FLAG)).thenReturn(Boolean.toString(false));
+
+        // when, then
+        mockMvc.perform(post("/upload/portfolios")
+                        .contentType("application/json")
+                        .param("memberId", member.getId().toString())
+                        .content("""
+                                [
+                                    {
+                                        "name": "test1.png",
+                                        "contentType": "image/png",
+                                        "contentLength": 126203
+                                    }
+                                ]
+                                """))
+                .andExpect(content().string(containsString("G-06")))
+                .andDo(print());
+    }
+
+    private String getContent() {
+        return """
+                [
+                    {
+                        "name": "test1.pdf",
+                        "contentType": "application/pdf",
+                        "contentLength": 126203
+                    },
+                    {
+                        "name": "test2.pdf",
+                        "contentType": "application/pdf",
+                        "contentLength": 126203
+                    }
+                ]
+                """;
     }
 }
