@@ -3,6 +3,7 @@ package org.ject.support.domain.file.controller;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ject.support.common.security.AuthPrincipal;
+import org.ject.support.domain.file.dto.UploadFileRequest;
 import org.ject.support.domain.file.dto.UploadFileResponse;
 import org.ject.support.external.s3.S3Service;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,14 +22,14 @@ public class FileController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/contents")
     public List<UploadFileResponse> uploadContents(@AuthPrincipal final Long memberId,
-                                                   @RequestBody final List<String> fileNames) {
-        return s3Service.uploadContents(memberId, fileNames);
+                                                   @RequestBody final List<UploadFileRequest> requests) {
+        return s3Service.uploadContents(memberId, requests);
     }
 
     @PreAuthorize("hasRole('ROLE_TEMP')")
     @PostMapping("/portfolios")
     public List<UploadFileResponse> uploadPortfolios(@AuthPrincipal final Long memberId,
-                                                     @RequestBody final List<String> fileNames) {
-        return s3Service.uploadPortfolios(memberId, fileNames);
+                                                     @RequestBody final List<UploadFileRequest> requests) {
+        return s3Service.uploadPortfolios(memberId, requests);
     }
 }

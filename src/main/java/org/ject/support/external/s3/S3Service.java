@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.ject.support.common.util.PeriodAccessible;
+import org.ject.support.domain.file.dto.UploadFileRequest;
 import org.ject.support.domain.file.dto.UploadFileResponse;
 import org.ject.support.domain.file.exception.FileErrorCode;
 import org.ject.support.domain.file.exception.FileException;
@@ -32,29 +33,30 @@ public class S3Service {
      * 지원자가 첨부한 포트폴리오 파일 이름과 해당 지원자의 식별자를 토대로 Pre-signed URL 생성
      */
     @PeriodAccessible
-    public List<UploadFileResponse> uploadPortfolios(Long memberId, List<String> fileNames) {
-        validatePortfolioExtension(fileNames);
-        return createPresignedUrls(memberId, fileNames);
+    public List<UploadFileResponse> uploadPortfolios(Long memberId, List<UploadFileRequest> requests) {
+        validatePortfolioExtension(requests);
+        return createPresignedUrls(memberId, requests);
     }
 
     /**
      * USER 이상의 권한을 가진 사용자가 첨부한 파일 이름과 해당 사용자의 식별자를 토대로 Pre-signed URL 생성
      */
-    public List<UploadFileResponse> uploadContents(Long memberId, List<String> fileNames) {
-        return createPresignedUrls(memberId, fileNames);
+    public List<UploadFileResponse> uploadContents(Long memberId, List<UploadFileRequest> requests) {
+        return createPresignedUrls(memberId, requests);
     }
 
-    private void validatePortfolioExtension(List<String> fileNames) {
-        if (fileNames.stream().anyMatch(fileName -> !fileName.endsWith("pdf"))) {
+    private void validatePortfolioExtension(List<UploadFileRequest> requests) {
+        if (requests.stream().anyMatch(request -> !request.contentType().equals("application/pdf"))) {
             throw new FileException(FileErrorCode.INVALID_EXTENSION);
         }
     }
 
-    private List<UploadFileResponse> createPresignedUrls(Long memberId, List<String> fileNames) {
-        return fileNames.stream()
-                .map(fileName -> {
-                    String keyName = getKeyName(memberId, fileName);
-                    PutObjectPresignRequest presignRequest = getPutObjectPresignRequest(keyName);
+    private List<UploadFileResponse> createPresignedUrls(Long memberId, List<UploadFileRequest> requests) {
+        return requests.stream()
+                .map(request -> {
+                    String keyName = getKeyName(memberId, request.name());
+                    PutObjectPresignRequest presignRequest =
+                            getPutObjectPresignRequest(keyName, request.contentType(), request.contentLength());
                     PresignedPutObjectRequest presignedRequest = s3Presigner.presignPutObject(presignRequest);
                     return getUploadFileResponse(keyName, presignedRequest);
                 })
@@ -66,17 +68,15 @@ public class S3Service {
         return String.format("%s/%s", memberId, uniqueFileName);
     }
 
-    private PutObjectPresignRequest getPutObjectPresignRequest(String keyName) {
+    private PutObjectPresignRequest getPutObjectPresignRequest(String keyName, String contentType, long contentLength) {
         return PutObjectPresignRequest.builder()
                 .signatureDuration(Duration.ofMinutes(EXPIRE_MINUTES))
-                .putObjectRequest(getPutObjectRequest(keyName))
-                .build();
-    }
-
-    private PutObjectRequest getPutObjectRequest(String keyName) {
-        return PutObjectRequest.builder()
-                .bucket(bucket)
-                .key(keyName)
+                .putObjectRequest(PutObjectRequest.builder()
+                        .bucket(bucket)
+                        .key(keyName)
+                        .contentType(contentType)
+                        .contentLength(contentLength)
+                        .build())
                 .build();
     }
 
