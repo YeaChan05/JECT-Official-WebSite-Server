@@ -6,6 +6,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import org.ject.support.domain.file.dto.UploadFileRequest;
 import org.ject.support.domain.file.dto.UploadFileResponse;
 import org.ject.support.domain.file.exception.FileException;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,24 +32,26 @@ class S3ServiceTest {
     private static final int EXPIRE_MINUTES = 10;
 
     @Mock
-    private S3Presigner s3Presigner;
+    PresignedPutObjectRequest presignedPutObjectRequest;
+
+    Instant expirationTime;
+    Long memberId;
+    List<UploadFileRequest> requests;
+    List<String> expectedPortfolioUploadUrls;
 
     @Mock
-    PresignedPutObjectRequest presignedPutObjectRequest;
+    private S3Presigner s3Presigner;
 
     @InjectMocks
     private S3Service s3Service;
 
-    Instant expirationTime;
-    Long memberId;
-    List<String> portfolioFileNames;
-    List<String> expectedPortfolioUploadUrls;
-
     @BeforeEach
     void setUp() {
+        requests = List.of(
+                new UploadFileRequest("portfolio1.pdf", "application/pdf", 12345),
+                new UploadFileRequest("portfolio2.pdf", "application/pdf", 12345));
         expirationTime = Instant.now().plusSeconds(60 * EXPIRE_MINUTES);
         memberId = 1L;
-        portfolioFileNames = List.of("portfolio1.pdf", "portfolio1.pdf");
         expectedPortfolioUploadUrls =
                 List.of(createExpectedUrl(memberId, "portfolio1.pdf"), createExpectedUrl(memberId, "portfolio2.pdf"));
     }
@@ -62,19 +65,19 @@ class S3ServiceTest {
         when(s3Presigner.presignPutObject((PutObjectPresignRequest) any())).thenReturn(presignedPutObjectRequest);
 
         // when
-        List<UploadFileResponse> result = s3Service.uploadPortfolios(1L, portfolioFileNames);
+        List<UploadFileResponse> result = s3Service.uploadPortfolios(1L, requests);
 
         // then
         assertThat(result).hasSize(2);
 
         UploadFileResponse firstResponse = result.get(0);
-        assertThat(firstResponse.keyName()).contains(portfolioFileNames.get(0));
+        assertThat(firstResponse.keyName()).contains(requests.get(0).name());
         assertThat(firstResponse.presignedUrl()).isEqualTo(expectedPortfolioUploadUrls.get(0));
         assertThat(firstResponse.expiration())
                 .isEqualTo(LocalDateTime.ofInstant(expirationTime, ZoneId.systemDefault()));
 
         UploadFileResponse secondResponse = result.get(1);
-        assertThat(secondResponse.keyName()).contains(portfolioFileNames.get(1));
+        assertThat(secondResponse.keyName()).contains(requests.get(1).name());
     }
 
     @Test
@@ -87,15 +90,15 @@ class S3ServiceTest {
 
         // when
         List<UploadFileResponse> result =
-                s3Service.uploadPortfolios(memberId, portfolioFileNames);
+                s3Service.uploadPortfolios(memberId, requests);
 
         // then
         assertThat(result).hasSize(2);
 
         for (int i = 0; i < 2; i++) {
-            UploadFileResponse firstResponse = result.get(0);
+            UploadFileResponse firstResponse = result.get(i);
             assertThat(firstResponse.keyName()).contains(memberId.toString());
-            assertThat(removePrefix(firstResponse.keyName())).startsWith(portfolioFileNames.get(i));
+            assertThat(removePrefix(firstResponse.keyName())).startsWith(requests.get(i).name());
             assertThat(firstResponse.keyName()).contains("_");
         }
     }
@@ -104,10 +107,10 @@ class S3ServiceTest {
     @DisplayName("유효하지 않은 확장자로 인한 포트폴리오 업로드 실패")
     void upload_portfolio_fail() {
         // given
-        List<String> invalidExtensionFileNames = List.of("test1.png", "test2.pdf");
+        List<UploadFileRequest> invalidRequests = List.of(new UploadFileRequest("test.png", "image/png", 12345));
 
         // when, then
-        assertThatThrownBy(() -> s3Service.uploadPortfolios(memberId, invalidExtensionFileNames))
+        assertThatThrownBy(() -> s3Service.uploadPortfolios(memberId, invalidRequests))
                 .isInstanceOf(FileException.class);
     }
 
