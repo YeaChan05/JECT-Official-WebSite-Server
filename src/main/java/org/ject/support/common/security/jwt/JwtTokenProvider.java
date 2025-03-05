@@ -78,7 +78,14 @@ public class JwtTokenProvider {
         Claims claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
         String email = claims.getSubject();
         Long memberId = claims.get("memberId", Long.class);
-        Role role = Role.valueOf(claims.get("role", String.class).toUpperCase());
+        String roleStr = claims.get("role", String.class).toUpperCase();
+        
+        // "ROLE_" 접두사가 있으면 제거
+        if (roleStr.startsWith("ROLE_")) {
+            roleStr = roleStr.substring(5);
+        }
+        
+        Role role = Role.valueOf(roleStr);
 
         CustomUserDetails userDetails = new CustomUserDetails(email, memberId, role);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
