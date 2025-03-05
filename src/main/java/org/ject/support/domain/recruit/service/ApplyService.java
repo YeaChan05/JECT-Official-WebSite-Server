@@ -24,7 +24,7 @@ public class ApplyService implements ApplyUsecase {
 
     @Override
     @PeriodAccessible
-    public Map<String, String> inquireApplication(final Long memberId) {
+    public Map<String, String> getTemporaryApplication(final Long memberId) {
         return temporaryApplyService.findMembersRecentTemporaryApplication(memberId);
     }
 

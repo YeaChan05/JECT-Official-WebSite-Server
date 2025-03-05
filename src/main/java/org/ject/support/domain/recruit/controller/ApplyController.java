@@ -19,8 +19,8 @@ public class ApplyController {
     private final ApplyUsecase applyUsecase;
 
     @GetMapping("/temp")
-    public Map<String, String> inquireApplication(@AuthPrincipal Long memberId) {
-        return applyUsecase.inquireApplication(memberId);
+    public Map<String, String> getTemporaryApplication(@AuthPrincipal Long memberId) {
+        return applyUsecase.getTemporaryApplication(memberId);
     }
 
     @PostMapping("/temp")
