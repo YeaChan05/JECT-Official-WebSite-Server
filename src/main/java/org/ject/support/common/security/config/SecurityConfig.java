@@ -41,6 +41,9 @@ public class SecurityConfig {
     @Value("${security.cors.allowed-origins-https}")
     private String allowedOriginsHttps;
 
+    @Value("${security.cors.allowed-origins-client}")
+    private String allowedOriginsClient;
+
     @Bean
     public static RoleHierarchy roleHierarchy() {
         return RoleHierarchyImpl.fromHierarchy("""
@@ -80,6 +83,7 @@ public class SecurityConfig {
         configuration.addAllowedOriginPattern("http://localhost:3000");
         configuration.addAllowedOriginPattern(allowedOrigins);
         configuration.addAllowedOriginPattern(allowedOriginsHttps);
+        configuration.addAllowedOriginPattern(allowedOriginsClient);
         configuration.addAllowedHeader("*");
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
         configuration.setAllowCredentials(true);
