@@ -24,7 +24,8 @@ public class MiniStudyQueryRepositoryImpl implements MiniStudyQueryRepository {
                 .select(new QMiniStudyResponse(
                         miniStudy.name,
                         miniStudy.linkUrl,
-                        miniStudy.imageUrl
+                        miniStudy.imageUrl,
+                        miniStudy.summary
                 ))
                 .from(miniStudy)
                 .orderBy(miniStudy.id.desc())
