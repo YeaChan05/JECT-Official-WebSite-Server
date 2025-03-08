@@ -22,6 +22,7 @@ public class MiniStudyQueryRepositoryImpl implements MiniStudyQueryRepository {
     public RestPage<MiniStudyResponse> findMiniStudies(Pageable pageable) {
         List<MiniStudyResponse> content = queryFactory
                 .select(new QMiniStudyResponse(
+                        miniStudy.id,
                         miniStudy.name,
                         miniStudy.linkUrl,
                         miniStudy.imageUrl,
