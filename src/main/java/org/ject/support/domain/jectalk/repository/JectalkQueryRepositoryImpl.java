@@ -22,6 +22,7 @@ public class JectalkQueryRepositoryImpl implements JectalkQueryRepository {
     public RestPage<JectalkResponse> findJectalks(Pageable pageable) {
         List<JectalkResponse> content = queryFactory
                 .select(new QJectalkResponse(
+                        jectalk.id,
                         jectalk.name,
                         jectalk.youtubeUrl,
                         jectalk.imageUrl,
