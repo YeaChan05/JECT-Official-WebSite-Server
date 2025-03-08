@@ -45,6 +45,7 @@ class JectalkQueryRepositoryTest {
 
         JectalkResponse firstResponse = responses.get(0);
         assertThat(firstResponse.name()).isEqualTo("젝톡 3"); // ID 내림차순이므로 마지막에 생성된 데이터가 첫 번째
+        assertThat(firstResponse.summary()).isEqualTo("summary");
         assertThat(firstResponse.youtubeUrl()).isEqualTo("https://youtube.com/jectalk3");
         assertThat(firstResponse.imageUrl()).isEqualTo("https://image.com/jectalk3.png");
 
@@ -57,6 +58,7 @@ class JectalkQueryRepositoryTest {
         String urlSafeName = "jectalk" + name.replaceAll("[젝톡 ]", "");
         return Jectalk.builder()
                 .name(name)
+                .summary("summary")
                 .youtubeUrl("https://youtube.com/" + urlSafeName)
                 .imageUrl("https://image.com/" + urlSafeName + ".png")
                 .build();
