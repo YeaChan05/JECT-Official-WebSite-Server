@@ -44,6 +44,7 @@ class ReviewRepositoryTest {
                 .linkUrl("https://test.com")
                 .title("title")
                 .description("description")
+                .summary("summary")
                 .build();
     }
 }
