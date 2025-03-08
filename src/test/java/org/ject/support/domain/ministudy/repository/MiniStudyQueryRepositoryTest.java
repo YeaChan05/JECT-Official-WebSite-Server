@@ -45,6 +45,7 @@ class MiniStudyQueryRepositoryTest {
 
         MiniStudyResponse firstResponse = responses.get(0);
         assertThat(firstResponse.name()).isEqualTo("미니 스터디 3"); // ID 내림차순이므로 마지막에 생성된 데이터가 첫 번째
+        assertThat(firstResponse.summary()).isEqualTo("summary");
         assertThat(firstResponse.linkUrl()).isEqualTo("https://test.net/ministudy3");
         assertThat(firstResponse.imageUrl()).isEqualTo("https://test.net/image3.png");
 
@@ -57,6 +58,7 @@ class MiniStudyQueryRepositoryTest {
         String urlSafeName = name.replaceAll("[미니 스터디]", "");
         return MiniStudy.builder()
                 .name(name)
+                .summary("summary")
                 .linkUrl("https://test.net/ministudy" + urlSafeName)
                 .imageUrl("https://test.net/image" + urlSafeName + ".png")
                 .build();
