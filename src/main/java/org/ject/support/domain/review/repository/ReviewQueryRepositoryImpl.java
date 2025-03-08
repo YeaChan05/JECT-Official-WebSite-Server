@@ -23,7 +23,8 @@ public class ReviewQueryRepositoryImpl implements ReviewQueryRepository {
         List<ReviewResponse> content = queryFactory.select(new QReviewResponse(
                         review.linkUrl,
                         review.title,
-                        review.description))
+                        review.description,
+                        review.summary))
                 .from(review)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
