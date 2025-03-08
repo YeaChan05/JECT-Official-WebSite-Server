@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.ject.support.common.security.jwt.JwtAccessDeniedHandler;
 import org.ject.support.common.security.jwt.JwtAuthenticationEntryPoint;
 import org.ject.support.common.security.jwt.JwtAuthenticationFilter;
+import org.ject.support.common.security.jwt.JwtExceptionHandlerFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +33,7 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtExceptionHandlerFilter jwtExceptionHandlerFilter;
 
     @Value("${security.cors.allowed-origins}")
     private String allowedOrigins;
@@ -66,10 +68,11 @@ public class SecurityConfig {
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/**").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtExceptionHandlerFilter, JwtAuthenticationFilter.class);
+
         return http.build();
     }
 
