@@ -28,8 +28,7 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                         project.thumbnailUrl,
                         project.name,
                         project.summary,
-                        project.startDate,
-                        project.endDate
+                        project.description
                 ))
                 .from(project)
                 .where(project.category.eq(category), project.semester.eq(semester))
