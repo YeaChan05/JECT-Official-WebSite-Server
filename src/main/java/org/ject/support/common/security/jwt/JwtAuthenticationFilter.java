@@ -36,17 +36,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String token = jwtTokenProvider.resolveToken(request);
 
-        if (token == null) {
-            chain.doFilter(request, response);
-            return;
+        if (token != null && jwtTokenProvider.validateToken(token)) {
+            Authentication auth = jwtTokenProvider.getAuthenticationByToken(token);
+            SecurityContextHolder.getContext().setAuthentication(auth);
         }
-
-        if (!jwtTokenProvider.validateToken(token)) {
-            throw new GlobalException(INVALID_ACCESS_TOKEN);
-        }
-
-        Authentication auth = jwtTokenProvider.getAuthenticationByToken(token);
-        SecurityContextHolder.getContext().setAuthentication(auth);
 
         chain.doFilter(request, response);
     }
