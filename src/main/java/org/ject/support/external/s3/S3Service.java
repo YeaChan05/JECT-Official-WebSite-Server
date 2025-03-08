@@ -1,5 +1,6 @@
 package org.ject.support.external.s3;
 
+import com.google.common.net.MediaType;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -46,9 +47,13 @@ public class S3Service {
     }
 
     private void validatePortfolioExtension(List<UploadFileRequest> requests) {
-        if (requests.stream().anyMatch(request -> !request.contentType().equals("application/pdf"))) {
+        if (requests.stream().anyMatch(request -> !isTypePdf(request.contentType()))) {
             throw new FileException(FileErrorCode.INVALID_EXTENSION);
         }
+    }
+
+    private boolean isTypePdf(String contentType) {
+        return MediaType.parse(contentType).is(MediaType.PDF);
     }
 
     private List<UploadFileResponse> createPresignedUrls(Long memberId, List<UploadFileRequest> requests) {
