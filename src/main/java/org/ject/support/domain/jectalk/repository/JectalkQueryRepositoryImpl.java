@@ -24,7 +24,8 @@ public class JectalkQueryRepositoryImpl implements JectalkQueryRepository {
                 .select(new QJectalkResponse(
                         jectalk.name,
                         jectalk.youtubeUrl,
-                        jectalk.imageUrl
+                        jectalk.imageUrl,
+                        jectalk.summary
                 ))
                 .from(jectalk)
                 .orderBy(jectalk.id.desc())
