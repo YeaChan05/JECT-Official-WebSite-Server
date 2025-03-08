@@ -31,7 +31,7 @@ public class ProjectService {
     /**
      * 주어진 기수의 프로젝트를 모두 조회합니다.
      */
-    @Cacheable(value = "project", key = "#category + ':' + #semester")
+    @Cacheable(value = "project", key = "#category + ':' + #semester + ':' + #pageable.pageNumber")
     @Transactional(readOnly = true)
     public RestPage<ProjectResponse> findProjects(final Project.Category category,
                                                   final String semester,
