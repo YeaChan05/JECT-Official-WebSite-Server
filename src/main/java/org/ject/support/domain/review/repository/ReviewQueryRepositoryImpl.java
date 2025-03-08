@@ -21,6 +21,7 @@ public class ReviewQueryRepositoryImpl implements ReviewQueryRepository {
     @Override
     public RestPage<ReviewResponse> findReviews(Pageable pageable) {
         List<ReviewResponse> content = queryFactory.select(new QReviewResponse(
+                        review.id,
                         review.linkUrl,
                         review.title,
                         review.description,
