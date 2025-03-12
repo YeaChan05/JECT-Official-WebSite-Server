@@ -19,7 +19,7 @@ public class RecruitQueryRepositoryImpl implements RecruitQueryRepository {
     public Optional<Recruit> findByStartDateAfterAndEndDateBefore(final LocalDateTime time) {
         LocalDate date = time.toLocalDate();
         Recruit fetched = jpaQueryFactory.selectFrom(recruit)
-                .where(recruit.startDate.after(date).and(recruit.endDate.before(date)))
+                .where(recruit.startDate.before(date).and(recruit.endDate.after(date)))
                 .fetchFirst();
         return Optional.ofNullable(fetched);
     }
