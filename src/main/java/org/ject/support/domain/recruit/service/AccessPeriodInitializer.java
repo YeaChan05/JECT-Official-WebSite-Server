@@ -31,6 +31,8 @@ public class AccessPeriodInitializer implements ApplicationRunner {
 
     private void setRecruitFlag(final Recruit recruit) {
         redisTemplate.opsForValue().set(Constants.PERIOD_FLAG, Boolean.toString(true),// 존재여부를 redis에 저장
-                Duration.between(recruit.getStartDate(), recruit.getEndDate()));// ttl은 지원 기간동안 살아있도록
+                Duration.between(
+                        recruit.getStartDate().atTime(0, 0, 0), // TODO 애초에 recruit 기간을 시간까지 관리하는게 낫지 않나?
+                        recruit.getEndDate().atTime(23, 59, 59)));// ttl은 지원 기간동안 살아있도록
     }
 }
