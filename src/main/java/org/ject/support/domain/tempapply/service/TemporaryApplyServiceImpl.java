@@ -17,7 +17,7 @@ public class TemporaryApplyServiceImpl implements TemporaryApplyService {
     @Override
     public Map<String, String> findMembersRecentTemporaryApplication(final Long memberId) {
         TemporaryApplication latestApplication =
-                temporaryApplicationRepository.findLatestByMemberId(memberId.toString()).stream()
+                temporaryApplicationRepository.findLatestByMemberId(memberId.toString())
                         .orElseThrow(() -> new TemporaryApplicationException(TemporaryApplicationErrorCode.NOT_FOUND));
 
         return latestApplication.getAnswers();
