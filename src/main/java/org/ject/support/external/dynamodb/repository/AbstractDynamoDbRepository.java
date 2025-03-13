@@ -76,4 +76,9 @@ public abstract class AbstractDynamoDbRepository<T extends EntityWithPrimaryKey>
         dynamoDbTemplate.scan(request, entityClass)
                 .items().stream().forEach(dynamoDbTemplate::delete);
     };
+
+    @Override
+    public void deleteByPartitionKey(final CompositeKey partitionKey) {
+        findByPartitionKey(partitionKey).forEach(dynamoDbTemplate::delete);
+    }
 }
