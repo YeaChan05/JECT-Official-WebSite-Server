@@ -12,6 +12,7 @@ import org.ject.support.external.dynamodb.domain.CompositeKey;
 import org.ject.support.testconfig.ApplicationPeriodTest;
 import org.ject.support.testconfig.AuthenticatedUser;
 import org.ject.support.testconfig.IntegrationTest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -87,6 +88,11 @@ class ApplyControllerTest extends ApplicationPeriodTest {
                 .pin("123456") // PIN 필드 추가
                 .build();
         memberRepository.save(member);
+    }
+
+    @AfterEach
+    void tearDown() {
+        temporaryApplicationRepository.deleteAll();
     }
 
     @Test
