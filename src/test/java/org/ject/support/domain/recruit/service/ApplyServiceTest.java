@@ -27,7 +27,7 @@ class ApplyServiceTest {
     @DisplayName("지원서 직군 변경")
     void change_job_family() {
         // given
-        when(temporaryApplyService.isSameJobFamilyWithRecentTemporaryApplication(1L, FE)).thenReturn(false);
+        when(temporaryApplyService.hasSameJobFamilyWithRecentTemporaryApplication(1L, FE)).thenReturn(false);
 
         // when
         applyService.changeJobFamily(1L, FE);
@@ -40,7 +40,7 @@ class ApplyServiceTest {
     @DisplayName("변경 요청한 직군이 이전에 임시 저장한 지원서의 직군과 동일한 경우 실패")
     void change_job_family_Fail_by_duplicate_job_family() {
         // given
-        when(temporaryApplyService.isSameJobFamilyWithRecentTemporaryApplication(1L, FE)).thenReturn(true);
+        when(temporaryApplyService.hasSameJobFamilyWithRecentTemporaryApplication(1L, FE)).thenReturn(true);
 
         // when, then
         Assertions.assertThatThrownBy(() -> applyService.changeJobFamily(1L, FE))

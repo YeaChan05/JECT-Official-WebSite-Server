@@ -47,7 +47,7 @@ public class ApplyService implements ApplyUsecase {
     @PeriodAccessible
     public void changeJobFamily(Long memberId, JobFamily newJobFamily) {
         // 기존 임시 지원서의 jobFamily와 newJobFamily가 동일하다면 예외 발생
-        if (temporaryApplyService.isSameJobFamilyWithRecentTemporaryApplication(memberId, newJobFamily)) {
+        if (temporaryApplyService.hasSameJobFamilyWithRecentTemporaryApplication(memberId, newJobFamily)) {
             throw new ApplyException(ApplyErrorCode.DUPLICATE_JOB_FAMILY);
         }
 

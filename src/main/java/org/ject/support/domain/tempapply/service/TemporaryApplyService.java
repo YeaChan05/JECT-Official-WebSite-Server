@@ -17,7 +17,7 @@ public interface TemporaryApplyService {
     /**
      * 변경 요청한 직군이 사용자의 최근 임시 지원서의 직군과 동일한지 판별
      */
-    boolean isSameJobFamilyWithRecentTemporaryApplication(Long memberId, JobFamily jobFamily);
+    boolean hasSameJobFamilyWithRecentTemporaryApplication(Long memberId, JobFamily jobFamily);
 
     /**
      * 사용자의 임시 지원서를 모두 제거

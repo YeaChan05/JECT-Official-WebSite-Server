@@ -33,7 +33,7 @@ public class TemporaryApplyServiceImpl implements TemporaryApplyService {
     }
 
     @Override
-    public boolean isSameJobFamilyWithRecentTemporaryApplication(final Long memberId, final JobFamily jobFamily) {
+    public boolean hasSameJobFamilyWithRecentTemporaryApplication(final Long memberId, final JobFamily jobFamily) {
         TemporaryApplication temporaryApplication = temporaryApplicationRepository.findLatestByMemberId(memberId.toString())
                 .orElseThrow(() -> new TemporaryApplicationException(TemporaryApplicationErrorCode.NOT_FOUND));
         return temporaryApplication.isSameJobFamily(jobFamily);
