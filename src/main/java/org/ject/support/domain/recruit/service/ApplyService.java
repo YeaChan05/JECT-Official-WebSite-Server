@@ -52,7 +52,7 @@ public class ApplyService implements ApplyUsecase {
         }
 
         // memberId를 통해 기존 임시 지원서 모두 제거
-        temporaryApplyService.deleteTemporaryApplicationsByMemberId(memberId);
+        temporaryApplyService.deleteTemporaryApplicationsByMemberId(memberId); // TODO 이벤트 기반 비동기 처리
     }
 
     private void validateQuestions(final Map<String, String> answers, final Recruit recruit) {
