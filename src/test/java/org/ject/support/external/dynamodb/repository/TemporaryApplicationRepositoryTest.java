@@ -1,23 +1,21 @@
 package org.ject.support.external.dynamodb.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.ject.support.domain.tempapply.domain.TemporaryApplication;
+import org.ject.support.domain.tempapply.repository.TemporaryApplicationRepository;
+import org.ject.support.external.dynamodb.domain.CompositeKey;
+import org.ject.support.testconfig.IntegrationTest;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.ject.support.domain.member.JobFamily;
-import org.ject.support.domain.tempapply.domain.TemporaryApplication;
-import org.ject.support.domain.tempapply.repository.TemporaryApplicationRepository;
-import org.ject.support.external.dynamodb.domain.CompositeKey;
-import org.ject.support.testconfig.IntegrationTest;
-import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @IntegrationTest
 class TemporaryApplicationRepositoryTest {
