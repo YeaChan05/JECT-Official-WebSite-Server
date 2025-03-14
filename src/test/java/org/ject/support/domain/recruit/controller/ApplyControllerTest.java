@@ -2,6 +2,7 @@ package org.ject.support.domain.recruit.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.ject.support.domain.member.Role.USER;
+import static org.ject.support.domain.recruit.domain.Question.InputType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -55,11 +56,11 @@ class ApplyControllerTest extends ApplicationPeriodTest {
     @BeforeEach
     void setUp() {
         List<Question> questions = List.of(
-                Question.builder().title("title1").body("question1").build(),
-                Question.builder().title("title2").body("question2").build(),
-                Question.builder().title("title3").body("question3").build(),
-                Question.builder().title("title4").body("question4").build(),
-                Question.builder().title("title5").body("question5").build()
+                Question.builder().sequence(1).inputType(TEXT).isRequired(true).title("title1").body("question1").build(),
+                Question.builder().sequence(2).inputType(TEXT).isRequired(true).title("title2").body("question2").build(),
+                Question.builder().sequence(3).inputType(TEXT).isRequired(true).title("title3").body("question3").build(),
+                Question.builder().sequence(4).inputType(TEXT).isRequired(true).title("title4").body("question4").build(),
+                Question.builder().sequence(5).inputType(TEXT).isRequired(true).title("title5").body("question5").build()
         );
 
         Recruit recruit = Recruit.builder()
