@@ -5,7 +5,6 @@ import org.ject.support.domain.member.entity.Member;
 import org.ject.support.domain.member.repository.MemberRepository;
 import org.ject.support.domain.recruit.domain.Question;
 import org.ject.support.domain.recruit.domain.Recruit;
-import org.ject.support.domain.recruit.dto.ApplyTemporaryRequest;
 import org.ject.support.domain.recruit.repository.RecruitRepository;
 import org.ject.support.domain.tempapply.domain.TemporaryApplication;
 import org.ject.support.domain.tempapply.repository.TemporaryApplicationRepository;
@@ -191,7 +190,8 @@ class ApplyControllerTest extends ApplicationPeriodTest {
                 "1",
                 Map.of("3", "답변3", "4", "답변4", "5", "답변5"),
                 "BE",
-                List.of(Map.of("key", "value"))));
+                List.of(Map.of("fileName", "nameNameA", "fileUrl", "https://~~A"),
+                        Map.of("fileName", "nameNameB", "fileUrl", "https://~~B"))));
 
         // when & then
         ResultActions resultActions = mockMvc.perform(get("/apply/temp"))
@@ -200,7 +200,9 @@ class ApplyControllerTest extends ApplicationPeriodTest {
                 .andExpectAll(
                         content().string(containsString("답변3")),
                         content().string(containsString("답변4")),
-                        content().string(containsString("답변5"))
+                        content().string(containsString("답변5")),
+                        content().string(containsString("fileName")),
+                        content().string(containsString("fileUrl"))
                 );
 
         resultActions.andDo(print());
