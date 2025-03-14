@@ -23,4 +23,12 @@ public class AuthDto {
     public record PinLoginResponse(String accessToken, String refreshToken) {
         // 로그인 성공 시 발급되는 토큰 응답 DTO
     }
+    
+    public record TokenRefreshRequest(String refreshToken) {
+        // 토큰 재발급 요청 DTO
+    }
+    
+    public record TokenRefreshResponse(String accessToken) {
+        // 토큰 재발급 응답 DTO
+    }
 }

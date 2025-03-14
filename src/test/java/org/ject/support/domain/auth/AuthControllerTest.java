@@ -1,11 +1,14 @@
 package org.ject.support.domain.auth;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.ject.support.domain.auth.AuthDto.TokenRefreshRequest;
+import org.ject.support.domain.auth.AuthDto.TokenRefreshResponse;
 import org.ject.support.domain.auth.AuthDto.PinLoginRequest;
 import org.ject.support.domain.auth.AuthDto.PinLoginResponse;
 import org.ject.support.domain.auth.AuthDto.VerifyAuthCodeOnlyResponse;
@@ -37,8 +40,9 @@ class AuthControllerTest {
     private final String TEST_EMAIL = "test@example.com";
     private final String TEST_AUTH_CODE = "123456";
     private final String TEST_VERIFICATION_TOKEN = "test.verification.token";
-    private final String TEST_ACCESS_TOKEN = "test.access.token";
     private final String TEST_REFRESH_TOKEN = "test.refresh.token";
+    private final String TEST_ACCESS_TOKEN = "test.access.token";
+    private final Long TEST_MEMBER_ID = 1L;
 
     @Test
     @DisplayName("인증 코드 검증 및 인증 토큰 발급 성공")
@@ -55,7 +59,25 @@ class AuthControllerTest {
 
         // then
         verify(authService).verifyEmailByAuthCodeOnly(TEST_EMAIL, TEST_AUTH_CODE);
-        org.assertj.core.api.Assertions.assertThat(result.verificationToken()).isEqualTo(TEST_VERIFICATION_TOKEN);
+        assertThat(result.verificationToken()).isEqualTo(TEST_VERIFICATION_TOKEN);
+    }
+    
+    @Test
+    @DisplayName("리프레시 토큰을 사용한 액세스 토큰 재발급 성공")
+    void refreshToken_Success() {
+        // given
+        TokenRefreshRequest request = new TokenRefreshRequest(TEST_REFRESH_TOKEN);
+        TokenRefreshResponse response = new TokenRefreshResponse(TEST_ACCESS_TOKEN);
+        
+        given(authService.refreshAccessToken(TEST_MEMBER_ID, request.refreshToken()))
+            .willReturn(response);
+
+        // when
+        TokenRefreshResponse result = authController.refreshToken(TEST_MEMBER_ID, request);
+
+        // then
+        verify(authService).refreshAccessToken(TEST_MEMBER_ID, TEST_REFRESH_TOKEN);
+        assertThat(result.accessToken()).isEqualTo(TEST_ACCESS_TOKEN);
     }
     
     @Test
@@ -94,7 +116,7 @@ class AuthControllerTest {
 }
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = true)
 @TestPropertySource(properties = {"spring.data.redis.repositories.enabled=false", "server.port=0"})
 class AuthControllerIntegrationTest extends ApplicationPeriodTest {
 
@@ -106,6 +128,7 @@ class AuthControllerIntegrationTest extends ApplicationPeriodTest {
 
     private final String TEST_EMAIL = "test@example.com";
     private final String TEST_AUTH_CODE = "123456";
+    private final String TEST_REFRESH_TOKEN = "test.refresh.token";
     
     @Test
     @DisplayName("@PreAuthorize(\"permitAll()\") 설정으로 인증 없이 접근 가능한지 확인")
@@ -122,6 +145,18 @@ class AuthControllerIntegrationTest extends ApplicationPeriodTest {
     }
     
     @Test
+    @DisplayName("@PreAuthorize(\"hasRole('ROLE_TEMP')\") 설정으로 인증이 필요한지 확인")
+    void refreshToken_WithRoleTemp_ShouldRequireAuthentication() throws Exception {
+        // given
+        TokenRefreshRequest request = new TokenRefreshRequest(TEST_REFRESH_TOKEN);
+        
+        // when & then
+        mockMvc.perform(post("/auth/login/pin")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+                        
     @DisplayName("PIN 로그인 API 인증 없이 접근 가능한지 확인")
     void loginWithPin_WithPermitAll_ShouldAllowAccessWithoutAuthentication() throws Exception {
         // given
