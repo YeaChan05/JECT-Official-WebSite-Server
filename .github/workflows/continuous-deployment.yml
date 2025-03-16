@@ -12,7 +12,7 @@ env:
   AWS_REGION: ap-northeast-2
 #  ECR_REPOSITORY: jecthome/was-repo
   S3_BUCKET_NAME: ject-bucket/apps
-  CODE_DEPLOY_APPLICATION_NAME: ject-home
+  CODE_DEPLOY_APPLICATION_NAME: ject-apply-deployer
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: actions-deployer
 
 jobs:
