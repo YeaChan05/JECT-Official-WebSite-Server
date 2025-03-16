@@ -1,12 +1,14 @@
 package org.ject.support.domain.member.service;
 
 import static org.ject.support.domain.member.exception.MemberErrorCode.ALREADY_EXIST_MEMBER;
+import static org.ject.support.domain.member.exception.MemberErrorCode.SAME_PIN;
 
 import lombok.RequiredArgsConstructor;
 import org.ject.support.common.security.jwt.JwtTokenProvider;
 import org.ject.support.domain.member.dto.MemberDto;
 import org.ject.support.domain.member.dto.MemberDto.RegisterRequest;
 import org.ject.support.domain.member.dto.MemberDto.RegisterResponse;
+import org.ject.support.domain.member.dto.MemberDto.UpdatePinRequest;
 import org.ject.support.domain.member.entity.Member;
 import org.ject.support.domain.member.exception.MemberErrorCode;
 import org.ject.support.domain.member.exception.MemberException;
@@ -46,7 +48,7 @@ public class MemberService {
         // 인증 및 토큰 발급
         Authentication authentication = jwtTokenProvider.createAuthenticationByMember(member);
         String accessToken = jwtTokenProvider.createAccessToken(authentication, member.getId());
-        String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
+        String refreshToken = jwtTokenProvider.createRefreshToken(authentication, member.getId());
 
         return new RegisterResponse(accessToken, refreshToken);
     }
@@ -71,5 +73,18 @@ public class MemberService {
                 .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER));
 
         member.updateNameAndPhoneNumber(request.name(), request.phoneNumber());
+    }
+
+    @Transactional
+    public void updatePin(UpdatePinRequest request, Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER));
+
+        if (passwordEncoder.matches(request.pin(), member.getPin())) {
+            throw new MemberException(SAME_PIN);
+        }
+
+        String encodedPin = passwordEncoder.encode(request.pin());
+        member.updatePin(encodedPin);
     }
 }
