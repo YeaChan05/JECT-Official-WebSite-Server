@@ -6,6 +6,7 @@ import org.ject.support.domain.member.JobFamily;
 import org.ject.support.domain.recruit.dto.ApplyTemporaryRequest;
 import org.ject.support.domain.recruit.dto.ApplyTemporaryResponse;
 import org.ject.support.domain.recruit.service.ApplyUsecase;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,11 +22,13 @@ public class ApplyController {
     private final ApplyUsecase applyUsecase;
 
     @GetMapping("/temp")
+    @PreAuthorize("hasRole('ROLE_TEMP')")
     public ApplyTemporaryResponse getTemporaryApplication(@AuthPrincipal Long memberId) {
         return applyUsecase.getTemporaryApplication(memberId);
     }
 
     @PostMapping("/temp")
+    @PreAuthorize("hasRole('ROLE_TEMP')")
     public void applyTemporary(@AuthPrincipal Long memberId,
                                @RequestParam JobFamily jobFamily,
                                @RequestBody ApplyTemporaryRequest request) {

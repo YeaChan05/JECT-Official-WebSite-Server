@@ -132,6 +132,14 @@ sourceSets {
     main.java.srcDirs += [ generated ]
 }
 
+jar{
+    enabled = false
+}
+
+bootJar {
+    archiveFileName = "ject-home.jar"
+}
+
 clean {
     delete file(generated)
 }
