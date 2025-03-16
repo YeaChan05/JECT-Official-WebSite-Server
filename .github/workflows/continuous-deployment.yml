@@ -11,7 +11,7 @@ permissions:
 env:
   AWS_REGION: ap-northeast-2
 #  ECR_REPOSITORY: jecthome/was-repo
-  S3_BUCKET_NAME: ject-bucket/apps
+  S3_BUCKET_NAME: ject-bucket
   CODE_DEPLOY_APPLICATION_NAME: ject-apply-deployer
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: actions-deployer
 
@@ -64,7 +64,7 @@ jobs:
           aws deploy push \
           --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
           --ignore-hidden-files \
-          --s3-location s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip \
+          --s3-location s3://$S3_BUCKET_NAME/apps/$GITHUB_SHA.zip \
           --source .
 
       - name: Deploy to AWS EC2 from S3
@@ -73,7 +73,7 @@ jobs:
             --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
             --deployment-config-name CodeDeployDefault.AllAtOnce \
             --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
-            --s3-location bucket=$S3_BUCKET_NAME,key=$GITHUB_SHA.zip,bundleType=zip
+            --s3-location bucket=$S3_BUCKET_NAME/apps,key=$GITHUB_SHA.zip,bundleType=zip
 
 #      - name: Docker 이미지 빌드 및 ECR 배포
 #        id: build-image
