@@ -1,10 +1,6 @@
 name: continuous deployment
 
 on:
-  pull_request:
-    types: [closed]
-    branches:
-      - main
   push:
     branches:
       - main
@@ -16,6 +12,7 @@ env:
   AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: jecthome/was-repo
   CODE_DEPLOY_APPLICATION_NAME: ject-home
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: actions-deployer
 
 jobs:
   build-deploy:
