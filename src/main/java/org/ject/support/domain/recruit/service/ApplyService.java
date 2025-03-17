@@ -1,11 +1,16 @@
 package org.ject.support.domain.recruit.service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.ject.support.common.util.PeriodAccessible;
 import org.ject.support.domain.member.JobFamily;
+import org.ject.support.domain.recruit.domain.Question;
 import org.ject.support.domain.recruit.domain.Recruit;
+import org.ject.support.domain.recruit.dto.ApplyTemporaryPortfolio;
+import org.ject.support.domain.recruit.dto.ApplyTemporaryResponse;
+import org.ject.support.domain.recruit.dto.Constants;
 import org.ject.support.domain.recruit.exception.ApplyErrorCode;
 import org.ject.support.domain.recruit.exception.ApplyException;
 import org.ject.support.domain.recruit.exception.QuestionErrorCode;
@@ -26,21 +31,27 @@ public class ApplyService implements ApplyUsecase {
 
     @Override
     @PeriodAccessible
-    public Map<String, String> getTemporaryApplication(final Long memberId) {
+    public ApplyTemporaryResponse getTemporaryApplication(final Long memberId) {
         return temporaryApplyService.findMembersRecentTemporaryApplication(memberId);
     }
 
     @Override
     @PeriodAccessible
-    public void applyTemporary(JobFamily jobFamily, Long memberId, Map<String, String> answers) {
-        //1. jobFamily를 통해 현재 기수 지원양식 id를 가져옴
+    public void applyTemporary(JobFamily jobFamily,
+                               Long memberId,
+                               Map<String, String> answers,
+                               List<ApplyTemporaryPortfolio> portfolios) {
+        // 1. jobFamily를 통해 현재 기수 지원양식 id를 가져옴
         Recruit recruit = getPeriodRecruit(jobFamily);
 
-        //2. 지원양식과 answers의 key를 비교해 올바른 질문 양식인지 점검
+        // 2. 지원양식과 answers의 key를 비교해 올바른 질문 양식인지 점검
         validateQuestions(answers, recruit);
 
-        //3. 지원서 저장
-        temporaryApplyService.saveTemporaryApplication(memberId, answers, jobFamily);
+        // 3. 파일 크기 검증
+        validatePortfolioTotalSize(portfolios);
+
+        // 4. 지원서 저장
+        temporaryApplyService.saveTemporaryApplication(memberId, answers, jobFamily, portfolios);
     }
 
     @Override
@@ -70,5 +81,14 @@ public class ApplyService implements ApplyUsecase {
                 .filter(recruit -> recruit.getJobFamily().equals(jobFamily))
                 .findAny()
                 .orElseThrow(() -> new RecruitException(RecruitErrorCode.NOT_FOUND));
+    }
+
+    private void validatePortfolioTotalSize(List<ApplyTemporaryPortfolio> portfolios) {
+        long totalSize = portfolios.stream()
+                .mapToLong(portfolio -> Long.parseLong(portfolio.fileSize()))
+                .sum();
+        if (totalSize > Constants.PORTFOLIO_MAX_SIZE) {
+            throw new ApplyException(ApplyErrorCode.EXCEEDED_PORTFOLIO_MAX_SIZE);
+        }
     }
 }

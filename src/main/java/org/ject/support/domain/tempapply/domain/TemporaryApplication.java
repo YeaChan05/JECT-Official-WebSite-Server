@@ -2,13 +2,17 @@ package org.ject.support.domain.tempapply.domain;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.ject.support.domain.member.JobFamily;
+import org.ject.support.domain.recruit.dto.ApplyTemporaryPortfolio;
 import org.ject.support.external.dynamodb.domain.CompositeKey;
 import org.ject.support.external.dynamodb.domain.EntityWithPrimaryKey;
+import org.ject.support.external.dynamodb.util.ApplyTemporaryPortfolioConverter;
 import org.ject.support.external.dynamodb.util.LocalDateTimeConverter;
 import org.ject.support.external.dynamodb.util.MapConverter;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
@@ -28,6 +32,20 @@ public class TemporaryApplication extends EntityWithPrimaryKey {
     private LocalDateTime timestamp;
     private String jobFamily;
     private Map<String, String> answers;
+    private List<ApplyTemporaryPortfolio> portfolios;
+
+    public TemporaryApplication(final String memberId,
+                                final Map<String, String> answers,
+                                final String jobFamily,
+                                final List<ApplyTemporaryPortfolio> portfolios) {
+        this.memberId = memberId;
+        this.timestamp = LocalDateTime.now();
+        this.answers = answers;
+        this.jobFamily = jobFamily;
+        this.portfolios = portfolios;
+        this.pk = new CompositeKey(PK_PREFIX, this.memberId);
+        this.sk = new CompositeKey(SK_PREFIX, this.timestamp.toString());
+    }
 
     @DynamoDbAttribute(value = "member_id")
     public String getMemberId() {
@@ -40,13 +58,9 @@ public class TemporaryApplication extends EntityWithPrimaryKey {
         return timestamp;
     }
 
-    public TemporaryApplication(final String memberId, final Map<String, String> answers, final String jobFamily) {
-        this.memberId = memberId;
-        this.timestamp = LocalDateTime.now();
-        this.answers = answers;
-        this.jobFamily = jobFamily;
-        this.pk = new CompositeKey(PK_PREFIX, this.memberId);
-        this.sk = new CompositeKey(SK_PREFIX, this.timestamp.toString());
+    @DynamoDbAttribute(value = "job_family")
+    public String getJobFamily() {
+        return jobFamily;
     }
 
     @DynamoDbAttribute(value = "answers")
@@ -55,9 +69,10 @@ public class TemporaryApplication extends EntityWithPrimaryKey {
         return answers;
     }
 
-    @DynamoDbAttribute(value = "job_family")
-    public String getJobFamily() {
-        return jobFamily;
+    @DynamoDbAttribute(value = "portfolios")
+    @DynamoDbConvertedBy(value = ApplyTemporaryPortfolioConverter.class)
+    public List<ApplyTemporaryPortfolio> getPortfolios() {
+        return portfolios;
     }
 
     public boolean isSameJobFamily(JobFamily jobFamily) {
