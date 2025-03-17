@@ -1,9 +1,10 @@
 package org.ject.support.domain.recruit.controller;
 
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.ject.support.common.security.AuthPrincipal;
 import org.ject.support.domain.member.JobFamily;
+import org.ject.support.domain.recruit.dto.ApplyTemporaryRequest;
+import org.ject.support.domain.recruit.dto.ApplyTemporaryResponse;
 import org.ject.support.domain.recruit.service.ApplyUsecase;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,7 @@ public class ApplyController {
 
     @GetMapping("/temp")
     @PreAuthorize("hasRole('ROLE_TEMP')")
-    public Map<String, String> getTemporaryApplication(@AuthPrincipal Long memberId) {
+    public ApplyTemporaryResponse getTemporaryApplication(@AuthPrincipal Long memberId) {
         return applyUsecase.getTemporaryApplication(memberId);
     }
 
@@ -30,8 +31,8 @@ public class ApplyController {
     @PreAuthorize("hasRole('ROLE_TEMP')")
     public void applyTemporary(@AuthPrincipal Long memberId,
                                @RequestParam JobFamily jobFamily,
-                               @RequestBody Map<String, String> answers) {
-        applyUsecase.applyTemporary(jobFamily, memberId, answers);
+                               @RequestBody ApplyTemporaryRequest request) {
+        applyUsecase.applyTemporary(jobFamily, memberId, request.answers(), request.portfolios());
     }
 
     @PutMapping("/job")
