@@ -109,12 +109,11 @@ class ApplyControllerTest extends ApplicationPeriodTest {
                         .content("""
                                 {
                                     "answers": {
-                                        "8": "8번 답변임",
-                                        "9": "9번 답변임~",
-                                        "10": "10번 답변임~~",
-                                        "11": "11번.",
-                                        "12": "12번 답변~",
-                                        "13": "13이이이임"
+                                        "1": "1번 답변임",
+                                        "2": "2번 답변임~",
+                                        "3": "3번 답변임~~",
+                                        "4": "4번.",
+                                        "5": "5번 답변~"
                                     },
                                     "portfolios": [
                                         {
@@ -134,6 +133,7 @@ class ApplyControllerTest extends ApplicationPeriodTest {
                                 """)
                 )
                 .andExpect(status().isOk())
+                .andExpect(content().string(containsString("SUCCESS")))
                 .andDo(print())
                 .andReturn();
     }
@@ -149,24 +149,49 @@ class ApplyControllerTest extends ApplicationPeriodTest {
                         .content("""
                                 {
                                     "answers": {
-                                        "8": "8번 답변임",
-                                        "9": "9번 답변임~",
-                                        "10": "10번 답변임~~",
-                                        "11": "11번.",
-                                        "12": "12번 답변~",
-                                        "14": "???"
+                                        "1": "1번 답변임",
+                                        "2": "2번 답변임~",
+                                        "3": "3번 답변임~~",
+                                        "4": "4번.",
+                                        "6": "???"
+                                    }
+                                }
+                                """)
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("QUESTION_NOT_FOUND")))
+                .andDo(print())
+                .andReturn();
+    }
+
+    @Test
+    @DisplayName("exceeded portfolio total size")
+    @AuthenticatedUser
+    @Transactional
+    void exceeded_portfolio_max_size() throws Exception {
+        mockMvc.perform(post("/apply/temp")
+                        .contentType("application/json")
+                        .param("jobFamily", "BE")
+                        .content("""
+                                {
+                                    "answers": {
+                                        "1": "1번 답변임",
+                                        "2": "2번 답변임~",
+                                        "3": "3번 답변임~~",
+                                        "4": "4번.",
+                                        "5": "5번 답변~"
                                     },
                                     "portfolios": [
                                         {
                                             "fileUrl": "filrUrlA",
                                             "fileName": "fileNameA",
-                                            "fileSize": "105021",
+                                            "fileSize": "52428800",
                                             "sequence": "1"
                                         },
                                         {
                                             "fileUrl": "filrUrlB",
                                             "fileName": "fileNameB",
-                                            "fileSize": "105021",
+                                            "fileSize": "53428800",
                                             "sequence": "2"
                                         }
                                     ]
@@ -174,7 +199,7 @@ class ApplyControllerTest extends ApplicationPeriodTest {
                                 """)
                 )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("QUESTION_NOT_FOUND")))
+                .andExpect(content().string(containsString("EXCEEDED_PORTFOLIO_SIZE")))
                 .andDo(print())
                 .andReturn();
     }

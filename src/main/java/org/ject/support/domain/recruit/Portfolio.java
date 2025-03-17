@@ -28,7 +28,7 @@ public class Portfolio extends BaseTimeEntity {
     private String fileName;
 
     @Column(nullable = false)
-    private Long fileSize;
+    private long fileSize; // byte
 
     @Column(nullable = false)
     private int sequence;
