@@ -7,10 +7,12 @@ import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.ject.support.domain.member.JobFamily;
+import org.ject.support.domain.recruit.dto.ApplyTemporaryPortfolio;
 import org.ject.support.external.dynamodb.domain.CompositeKey;
 import org.ject.support.external.dynamodb.domain.EntityWithPrimaryKey;
-import org.ject.support.external.dynamodb.util.ListMapConverter;
+import org.ject.support.external.dynamodb.util.ApplyTemporaryPortfolioConverter;
 import org.ject.support.external.dynamodb.util.LocalDateTimeConverter;
 import org.ject.support.external.dynamodb.util.MapConverter;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
@@ -30,12 +32,12 @@ public class TemporaryApplication extends EntityWithPrimaryKey {
     private LocalDateTime timestamp;
     private String jobFamily;
     private Map<String, String> answers;
-    private List<Map<String, String>> portfolios;
+    private List<ApplyTemporaryPortfolio> portfolios;
 
     public TemporaryApplication(final String memberId,
                                 final Map<String, String> answers,
                                 final String jobFamily,
-                                final List<Map<String, String>> portfolios) {
+                                final List<ApplyTemporaryPortfolio> portfolios) {
         this.memberId = memberId;
         this.timestamp = LocalDateTime.now();
         this.answers = answers;
@@ -68,8 +70,8 @@ public class TemporaryApplication extends EntityWithPrimaryKey {
     }
 
     @DynamoDbAttribute(value = "portfolios")
-    @DynamoDbConvertedBy(value = ListMapConverter.class)
-    public List<Map<String, String>> getPortfolios() {
+    @DynamoDbConvertedBy(value = ApplyTemporaryPortfolioConverter.class)
+    public List<ApplyTemporaryPortfolio> getPortfolios() {
         return portfolios;
     }
 

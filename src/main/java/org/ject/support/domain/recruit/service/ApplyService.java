@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.ject.support.common.util.PeriodAccessible;
 import org.ject.support.domain.member.JobFamily;
 import org.ject.support.domain.recruit.domain.Recruit;
+import org.ject.support.domain.recruit.dto.ApplyTemporaryPortfolio;
 import org.ject.support.domain.recruit.dto.ApplyTemporaryResponse;
 import org.ject.support.domain.recruit.exception.ApplyErrorCode;
 import org.ject.support.domain.recruit.exception.ApplyException;
@@ -37,7 +38,7 @@ public class ApplyService implements ApplyUsecase {
     public void applyTemporary(JobFamily jobFamily,
                                Long memberId,
                                Map<String, String> answers,
-                               List<Map<String, String>> portfolios) {
+                               List<ApplyTemporaryPortfolio> portfolios) {
         //1. jobFamily를 통해 현재 기수 지원양식 id를 가져옴
         Recruit recruit = getPeriodRecruit(jobFamily);
 

@@ -3,6 +3,7 @@ package org.ject.support.domain.recruit.service;
 import java.util.List;
 import java.util.Map;
 import org.ject.support.domain.member.JobFamily;
+import org.ject.support.domain.recruit.dto.ApplyTemporaryPortfolio;
 import org.ject.support.domain.recruit.dto.ApplyTemporaryResponse;
 
 public interface ApplyUsecase {
@@ -11,7 +12,7 @@ public interface ApplyUsecase {
     void applyTemporary(JobFamily jobFamily,
                         Long memberId,
                         Map<String, String> answers,
-                        List<Map<String, String>> portfolios);
+                        List<ApplyTemporaryPortfolio> portfolios);
 
 
     void changeJobFamily(Long memberId, JobFamily newJobFamily);

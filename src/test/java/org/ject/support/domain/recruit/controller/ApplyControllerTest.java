@@ -5,6 +5,7 @@ import org.ject.support.domain.member.entity.Member;
 import org.ject.support.domain.member.repository.MemberRepository;
 import org.ject.support.domain.recruit.domain.Question;
 import org.ject.support.domain.recruit.domain.Recruit;
+import org.ject.support.domain.recruit.dto.ApplyTemporaryPortfolio;
 import org.ject.support.domain.recruit.repository.RecruitRepository;
 import org.ject.support.domain.tempapply.domain.TemporaryApplication;
 import org.ject.support.domain.tempapply.repository.TemporaryApplicationRepository;
@@ -186,13 +187,12 @@ class ApplyControllerTest extends ApplicationPeriodTest {
                 "1",
                 Map.of("1", "답변1", "2", "답변2"),
                 "PM",
-                List.of(Map.of("key", "value"))));
+                List.of(createApplyTemporaryPortfolio("1"))));
         temporaryApplicationRepository.save(createTemporaryApplication(
                 "1",
                 Map.of("3", "답변3", "4", "답변4", "5", "답변5"),
                 "BE",
-                List.of(Map.of("fileName", "nameNameA", "fileUrl", "https://~~A"),
-                        Map.of("fileName", "nameNameB", "fileUrl", "https://~~B"))));
+                List.of(createApplyTemporaryPortfolio("1"), createApplyTemporaryPortfolio("2"))));
 
         // when & then
         ResultActions resultActions = mockMvc.perform(get("/apply/temp"))
@@ -217,23 +217,23 @@ class ApplyControllerTest extends ApplicationPeriodTest {
         temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of(
                 "8", "answer 1-1 for 8",
                 "9", "answer 1-1 for 9",
-                "10", "answer 1-1 for 10"), "BE", List.of(Map.of("key", "value"))));
+                "10", "answer 1-1 for 10"), "BE", List.of(createApplyTemporaryPortfolio("1"))));
         temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of(
                 "8", "answer 1-2 for 8",
                 "9", "answer 1-2 for 9",
-                "10", "answer 1-2 for 10"), "BE", List.of(Map.of("key", "value"))));
+                "10", "answer 1-2 for 10"), "BE", List.of(createApplyTemporaryPortfolio("1"))));
         temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of(
                 "8", "answer 1-3 for 8",
                 "9", "answer 1-3 for 9",
-                "10", "answer 1-3 for 10"), "BE", List.of(Map.of("key", "value"))));
+                "10", "answer 1-3 for 10"), "BE", List.of(createApplyTemporaryPortfolio("1"))));
         temporaryApplicationRepository.save(new TemporaryApplication("2", Map.of(
                 "8", "answer 2-1 for 8",
                 "9", "answer 2-1 for 9",
-                "10", "answer 2-1 for 10"), "BE", List.of(Map.of("key", "value"))));
+                "10", "answer 2-1 for 10"), "BE", List.of(createApplyTemporaryPortfolio("1"))));
         temporaryApplicationRepository.save(new TemporaryApplication("2", Map.of(
                 "8", "answer 2-2 for 8",
                 "9", "answer 2-2 for 9",
-                "10", "answer 2-2 for 10"), "BE", List.of(Map.of("key", "value"))));
+                "10", "answer 2-2 for 10"), "BE", List.of(createApplyTemporaryPortfolio("1"))));
 
         // when, then
         mockMvc.perform(put("/apply/job")
@@ -252,7 +252,11 @@ class ApplyControllerTest extends ApplicationPeriodTest {
     private TemporaryApplication createTemporaryApplication(String memberId,
                                                             Map<String, String> answers,
                                                             String jobFamily,
-                                                            List<Map<String, String>> portfolios) {
+                                                            List<ApplyTemporaryPortfolio> portfolios) {
         return new TemporaryApplication(memberId, answers, jobFamily, portfolios);
+    }
+
+    private ApplyTemporaryPortfolio createApplyTemporaryPortfolio(String sequence) {
+        return new ApplyTemporaryPortfolio("url", "name", "10202", sequence);
     }
 }

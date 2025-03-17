@@ -3,6 +3,7 @@ package org.ject.support.domain.tempapply.service;
 import java.util.List;
 import java.util.Map;
 import org.ject.support.domain.member.JobFamily;
+import org.ject.support.domain.recruit.dto.ApplyTemporaryPortfolio;
 import org.ject.support.domain.recruit.dto.ApplyTemporaryResponse;
 
 public interface TemporaryApplyService {
@@ -17,7 +18,7 @@ public interface TemporaryApplyService {
     void saveTemporaryApplication(Long memberId,
                                   Map<String, String> answers,
                                   JobFamily jobFamily,
-                                  List<Map<String, String>> portfolios);
+                                  List<ApplyTemporaryPortfolio> portfolios);
 
     /**
      * 변경 요청한 직군이 사용자의 최근 임시 지원서의 직군과 동일한지 판별
