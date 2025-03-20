@@ -2,6 +2,7 @@ package org.ject.support.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -58,6 +59,16 @@ public class GlobalExceptionHandler{
     @ExceptionHandler(NoResourceFoundException.class)
     protected ErrorCode handleNoResourceFoundException(NoResourceFoundException e) {
         GlobalErrorCode errorCode = GlobalErrorCode.RESOURCE_NOT_FOUND;
+        logException(e, errorCode);
+        return errorCode;
+    }
+
+    /**
+     * 필수 파라미터가 누락되었을 때 발생
+     */
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    protected ErrorCode handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
+        GlobalErrorCode errorCode = GlobalErrorCode.MISS_REQUIRED_REQUEST_PARAMETER;
         logException(e, errorCode);
         return errorCode;
     }
