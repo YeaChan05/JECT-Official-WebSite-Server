@@ -1,6 +1,7 @@
 package org.ject.support.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -69,6 +70,16 @@ public class GlobalExceptionHandler{
     @ExceptionHandler(MissingServletRequestParameterException.class)
     protected ErrorCode handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
         GlobalErrorCode errorCode = GlobalErrorCode.MISS_REQUIRED_REQUEST_PARAMETER;
+        logException(e, errorCode);
+        return errorCode;
+    }
+
+    /**
+     * 요청 body가 누락되었을 때 발생
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    protected ErrorCode handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        GlobalErrorCode errorCode = GlobalErrorCode.MISS_REQUEST_BODY;
         logException(e, errorCode);
         return errorCode;
     }

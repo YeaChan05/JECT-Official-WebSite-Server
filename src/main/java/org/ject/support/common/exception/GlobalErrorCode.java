@@ -17,7 +17,8 @@ public enum GlobalErrorCode implements ErrorCode {
     AUTHENTICATION_REQUIRED("G-09", "Authentication is required"),
     INTERNAL_SERVER_ERROR("G-10", "Internal server error"),
     OVER_PERIOD("G-11", "모집 기간이 아닙니다."),
-    MISS_REQUIRED_REQUEST_PARAMETER("G-12", "Missing required parameter"),;
+    MISS_REQUIRED_REQUEST_PARAMETER("G-12", "Missing required parameter"),
+    MISS_REQUEST_BODY("G-13", "Missing request body"),;
 
     private final String code;
     private final String message;
