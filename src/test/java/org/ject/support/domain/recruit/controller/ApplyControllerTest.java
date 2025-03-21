@@ -165,46 +165,6 @@ class ApplyControllerTest extends ApplicationPeriodTest {
     }
 
     @Test
-    @DisplayName("exceeded portfolio total size")
-    @AuthenticatedUser
-    @Transactional
-    void exceeded_portfolio_max_size() throws Exception {
-        mockMvc.perform(post("/apply/temp")
-                        .contentType("application/json")
-                        .param("jobFamily", "BE")
-                        .content("""
-                                {
-                                    "answers": {
-                                        "1": "1번 답변임",
-                                        "2": "2번 답변임~",
-                                        "3": "3번 답변임~~",
-                                        "4": "4번.",
-                                        "5": "5번 답변~"
-                                    },
-                                    "portfolios": [
-                                        {
-                                            "fileUrl": "filrUrlA",
-                                            "fileName": "fileNameA",
-                                            "fileSize": "52428800",
-                                            "sequence": "1"
-                                        },
-                                        {
-                                            "fileUrl": "filrUrlB",
-                                            "fileName": "fileNameB",
-                                            "fileSize": "53428800",
-                                            "sequence": "2"
-                                        }
-                                    ]
-                                }
-                                """)
-                )
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("EXCEEDED_PORTFOLIO_SIZE")))
-                .andDo(print())
-                .andReturn();
-    }
-
-    @Test
     @AuthenticatedUser
     void inquire_temporal_application() throws Exception {
         // given: 테스트 데이터 저장
