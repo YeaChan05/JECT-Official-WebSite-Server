@@ -36,6 +36,7 @@ public class ApplyController {
     }
 
     @PutMapping("/job")
+    @PreAuthorize("hasRole('ROLE_TEMP')")
     public void changeJobFamily(@AuthPrincipal Long memberId, @RequestBody JobFamily newJobFamily) {
         applyUsecase.changeJobFamily(memberId, newJobFamily);
     }
