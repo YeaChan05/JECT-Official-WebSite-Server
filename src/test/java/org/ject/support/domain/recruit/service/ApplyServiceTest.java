@@ -2,7 +2,7 @@ package org.ject.support.domain.recruit.service;
 
 import org.ject.support.domain.recruit.domain.Question;
 import org.ject.support.domain.recruit.domain.Recruit;
-import org.ject.support.domain.recruit.dto.ApplyTemporaryPortfolio;
+import org.ject.support.domain.recruit.dto.ApplyPortfolioDto;
 import org.ject.support.domain.recruit.exception.ApplyException;
 import org.ject.support.domain.recruit.repository.RecruitRepository;
 import org.ject.support.domain.tempapply.service.TemporaryApplyService;
@@ -81,9 +81,9 @@ class ApplyServiceTest {
 
         when(recruitRepository.findActiveRecruits(LocalDate.now())).thenReturn(List.of(recruit));
 
-        List<ApplyTemporaryPortfolio> applyTemporaryPortfolios =
-                List.of(new ApplyTemporaryPortfolio("url", "name", "52428800", "1"),
-                        new ApplyTemporaryPortfolio("url", "name", "62428800", "2"));
+        List<ApplyPortfolioDto> applyTemporaryPortfolios =
+                List.of(new ApplyPortfolioDto("url", "name", "52428800", "1"),
+                        new ApplyPortfolioDto("url", "name", "62428800", "2"));
 
         // when, then
         assertThatThrownBy(() ->

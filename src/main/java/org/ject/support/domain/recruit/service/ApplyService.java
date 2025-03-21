@@ -6,9 +6,8 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.ject.support.common.util.PeriodAccessible;
 import org.ject.support.domain.member.JobFamily;
-import org.ject.support.domain.recruit.domain.Question;
 import org.ject.support.domain.recruit.domain.Recruit;
-import org.ject.support.domain.recruit.dto.ApplyTemporaryPortfolio;
+import org.ject.support.domain.recruit.dto.ApplyPortfolioDto;
 import org.ject.support.domain.recruit.dto.ApplyTemporaryResponse;
 import org.ject.support.domain.recruit.dto.Constants;
 import org.ject.support.domain.recruit.exception.ApplyErrorCode;
@@ -40,7 +39,7 @@ public class ApplyService implements ApplyUsecase {
     public void applyTemporary(JobFamily jobFamily,
                                Long memberId,
                                Map<String, String> answers,
-                               List<ApplyTemporaryPortfolio> portfolios) {
+                               List<ApplyPortfolioDto> portfolios) {
         // 1. jobFamily를 통해 현재 기수 지원양식 id를 가져옴
         Recruit recruit = getPeriodRecruit(jobFamily);
 
@@ -83,7 +82,7 @@ public class ApplyService implements ApplyUsecase {
                 .orElseThrow(() -> new RecruitException(RecruitErrorCode.NOT_FOUND));
     }
 
-    private void validatePortfolioTotalSize(List<ApplyTemporaryPortfolio> portfolios) {
+    private void validatePortfolioTotalSize(List<ApplyPortfolioDto> portfolios) {
         long totalSize = portfolios.stream()
                 .mapToLong(portfolio -> Long.parseLong(portfolio.fileSize()))
                 .sum();
