@@ -46,10 +46,7 @@ public class ApplyService implements ApplyUsecase {
         // 2. 지원양식과 answers의 key를 비교해 올바른 질문 양식인지 점검
         validateQuestions(answers, recruit);
 
-        // 3. 파일 크기 검증
-        validatePortfolioTotalSize(portfolios);
-
-        // 4. 지원서 저장
+        // 3. 지원서 저장
         temporaryApplyService.saveTemporaryApplication(memberId, answers, jobFamily, portfolios);
     }
 
@@ -80,14 +77,5 @@ public class ApplyService implements ApplyUsecase {
                 .filter(recruit -> recruit.getJobFamily().equals(jobFamily))
                 .findAny()
                 .orElseThrow(() -> new RecruitException(RecruitErrorCode.NOT_FOUND));
-    }
-
-    private void validatePortfolioTotalSize(List<ApplyPortfolioDto> portfolios) {
-        long totalSize = portfolios.stream()
-                .mapToLong(portfolio -> Long.parseLong(portfolio.fileSize()))
-                .sum();
-        if (totalSize > Constants.PORTFOLIO_MAX_SIZE) {
-            throw new ApplyException(ApplyErrorCode.EXCEEDED_PORTFOLIO_MAX_SIZE);
-        }
     }
 }
