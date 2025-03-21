@@ -97,6 +97,7 @@ class ApplyControllerTest extends ApplicationPeriodTest {
     @AfterEach
     void tearDown() {
         temporaryApplicationRepository.deleteAll();
+        memberRepository.deleteAll();
     }
 
     @Test
@@ -238,8 +239,6 @@ class ApplyControllerTest extends ApplicationPeriodTest {
     @DisplayName("submit application form")
     @AuthenticatedUser
     void submit_application_form() throws Exception {
-        // given
-
         // when, then
         mockMvc.perform(post("/apply/submit")
                         .contentType("application/json")
