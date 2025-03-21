@@ -1,5 +1,7 @@
 package org.ject.support.domain.recruit.dto;
 
+import org.ject.support.domain.tempapply.domain.TemporaryApplication;
+
 import java.util.List;
 import java.util.Map;
 

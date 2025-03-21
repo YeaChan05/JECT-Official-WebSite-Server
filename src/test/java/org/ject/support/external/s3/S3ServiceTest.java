@@ -72,13 +72,13 @@ class S3ServiceTest {
         assertThat(result).hasSize(2);
 
         UploadFileResponse firstResponse = result.get(0);
-        assertThat(firstResponse.keyName()).contains(requests.get(0).name());
+        assertThat(firstResponse.cdnUrl()).contains(requests.get(0).name());
         assertThat(firstResponse.presignedUrl()).isEqualTo(expectedPortfolioUploadUrls.get(0));
         assertThat(firstResponse.expiration())
                 .isEqualTo(LocalDateTime.ofInstant(expirationTime, ZoneId.systemDefault()));
 
         UploadFileResponse secondResponse = result.get(1);
-        assertThat(secondResponse.keyName()).contains(requests.get(1).name());
+        assertThat(secondResponse.cdnUrl()).contains(requests.get(1).name());
     }
 
     @Test
@@ -98,9 +98,8 @@ class S3ServiceTest {
 
         for (int i = 0; i < 2; i++) {
             UploadFileResponse firstResponse = result.get(i);
-            assertThat(firstResponse.keyName()).contains(memberId.toString());
-            assertThat(removePrefix(firstResponse.keyName())).startsWith(requests.get(i).name());
-            assertThat(firstResponse.keyName()).contains("_");
+            assertThat(firstResponse.cdnUrl()).contains(memberId.toString());
+            assertThat(firstResponse.cdnUrl()).contains("_");
         }
     }
 
@@ -132,10 +131,5 @@ class S3ServiceTest {
 
     private String createExpectedUrl(Long memberId, String fileName) {
         return String.format("%s/%d/%s", CDN_DOMAIN, memberId, fileName);
-    }
-
-    private String removePrefix(String keyName) {
-        String prefix = String.format("%s/", memberId);
-        return keyName.replace(prefix, "");
     }
 }
