@@ -234,6 +234,49 @@ class ApplyControllerTest extends ApplicationPeriodTest {
         assertThat(temporaryApplicationRepository.findByPartitionKey(new CompositeKey("MEMBER", "2"))).hasSize(2);
     }
 
+    @Test
+    @DisplayName("submit application form")
+    @AuthenticatedUser
+    void submit_application_form() throws Exception {
+        // given
+
+        // when, then
+        mockMvc.perform(post("/apply/submit")
+                        .contentType("application/json")
+                        .param("jobFamily", "BE")
+                        .content("""
+                                {
+                                    "answers": {
+                                        "1": "1번 답변임",
+                                        "2": "2번 답변임~",
+                                        "3": "3번 답변임~~",
+                                        "4": "4번.",
+                                        "5": "5번 답변~"
+                                    },
+                                    "portfolios": [
+                                        {
+                                            "fileUrl": "filrUrlA",
+                                            "fileName": "fileNameA",
+                                            "fileSize": "105021",
+                                            "sequence": "1"
+                                        },
+                                        {
+                                            "fileUrl": "filrUrlB",
+                                            "fileName": "fileNameB",
+                                            "fileSize": "105021",
+                                            "sequence": "2"
+                                        }
+                                    ]
+                                }
+                                """)
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("SUCCESS")))
+                .andDo(print())
+                .andReturn();
+
+    }
+
     private TemporaryApplication createTemporaryApplication(String memberId,
                                                             Map<String, String> answers,
                                                             String jobFamily,
