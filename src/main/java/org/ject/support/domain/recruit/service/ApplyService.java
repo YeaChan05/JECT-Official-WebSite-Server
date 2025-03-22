@@ -95,17 +95,12 @@ public class ApplyService implements ApplyUsecase {
         // 3. 지원양식과 answers의 key를 비교해 올바른 질문 양식인지 점검
         validateQuestions(answers, recruit);
 
-        // 4. answers를 json 직렬화하여 ApplicationForm 저장
-        ApplicationForm applicationForm =
-                applicationFormRepository.save(createApplicationForm(answers, applicant, recruit));
-
-        // 5. Portfolio 저장
+        // 4. Portfolio와 ApplicationForm 영속화
+        ApplicationForm applicationForm = createApplicationForm(answers, applicant, recruit);
         portfolios.stream()
                 .map(ApplyPortfolioDto::toEntity)
-                .forEach(portfolio -> {
-                    applicationForm.addPortfolio(portfolio);
-                    portfolioRepository.save(portfolio);
-                });
+                .forEach(applicationForm::addPortfolio);
+        applicationFormRepository.save(applicationForm);
     }
 
     private void validateQuestions(final Map<String, String> answers, final Recruit recruit) {

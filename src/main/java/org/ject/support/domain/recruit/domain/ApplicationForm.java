@@ -1,5 +1,6 @@
 package org.ject.support.domain.recruit.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -43,7 +44,7 @@ public class ApplicationForm extends BaseTimeEntity {
     @JoinColumn(name = "recruit_id", nullable = false)
     private Recruit recruit;
 
-    @OneToMany(mappedBy = "applicationForm", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "applicationForm", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("sequence asc")
     @Builder.Default
     private List<Portfolio> portfolios = new ArrayList<>();
