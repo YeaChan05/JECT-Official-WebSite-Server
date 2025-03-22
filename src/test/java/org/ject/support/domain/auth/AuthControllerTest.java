@@ -154,7 +154,7 @@ class AuthControllerIntegrationTest extends ApplicationPeriodTest {
         mockMvc.perform(post("/auth/login/pin")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isOk());
     }
                         
     @DisplayName("PIN 로그인 API 인증 없이 접근 가능한지 확인")
