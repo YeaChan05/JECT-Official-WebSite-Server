@@ -20,7 +20,6 @@ import org.ject.support.domain.recruit.exception.QuestionException;
 import org.ject.support.domain.recruit.exception.RecruitErrorCode;
 import org.ject.support.domain.recruit.exception.RecruitException;
 import org.ject.support.domain.recruit.repository.ApplicationFormRepository;
-import org.ject.support.domain.recruit.repository.PortfolioRepository;
 import org.ject.support.domain.recruit.repository.RecruitRepository;
 import org.ject.support.domain.tempapply.service.TemporaryApplyService;
 import org.springframework.stereotype.Service;
@@ -38,7 +37,6 @@ public class ApplyService implements ApplyUsecase {
     private final RecruitRepository recruitRepository;
     private final MemberRepository memberRepository;
     private final ApplicationFormRepository applicationFormRepository;
-    private final PortfolioRepository portfolioRepository;
     private final Map2JsonSerializer map2JsonSerializer;
 
     @Override
