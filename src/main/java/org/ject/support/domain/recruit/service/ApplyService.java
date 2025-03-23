@@ -2,7 +2,7 @@ package org.ject.support.domain.recruit.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ject.support.common.util.Json2MapSerializer;
+import org.ject.support.common.util.Map2JsonSerializer;
 import org.ject.support.common.util.PeriodAccessible;
 import org.ject.support.domain.member.JobFamily;
 import org.ject.support.domain.member.entity.Member;
@@ -39,7 +39,7 @@ public class ApplyService implements ApplyUsecase {
     private final MemberRepository memberRepository;
     private final ApplicationFormRepository applicationFormRepository;
     private final PortfolioRepository portfolioRepository;
-    private final Json2MapSerializer json2MapSerializer;
+    private final Map2JsonSerializer map2JsonSerializer;
 
     @Override
     @PeriodAccessible
@@ -122,7 +122,7 @@ public class ApplyService implements ApplyUsecase {
 
     private ApplicationForm createApplicationForm(Map<String, String> answers, Member applicant, Recruit recruit) {
         return ApplicationForm.builder()
-                .content(json2MapSerializer.serializeAsString(answers))
+                .content(map2JsonSerializer.serializeAsString(answers))
                 .member(applicant)
                 .recruit(recruit)
                 .build();
