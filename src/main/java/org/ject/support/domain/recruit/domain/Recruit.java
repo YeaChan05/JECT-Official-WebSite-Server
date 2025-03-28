@@ -36,8 +36,8 @@ public class Recruit extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20, nullable = false)
-    private String semester;
+    @Column(length = 10, nullable = false)
+    private Long semesterId;
 
     @Column(nullable = false)
     private LocalDateTime startDate;
