@@ -1,4 +1,4 @@
-package org.ject.support.domain.semseter.repository;
+package org.ject.support.domain.recruit.repository;
 
 import java.util.Optional;
 

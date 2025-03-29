@@ -1,9 +1,9 @@
 package org.ject.support.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
-import org.ject.support.domain.semseter.SemesterRepository;
-import org.ject.support.domain.semseter.exception.SemesterErrorCode;
-import org.ject.support.domain.semseter.exception.SemesterException;
+import org.ject.support.domain.recruit.exception.SemesterErrorCode;
+import org.ject.support.domain.recruit.exception.SemesterException;
+import org.ject.support.domain.recruit.repository.SemesterRepository;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,4 +1,4 @@
-package org.ject.support.domain.semseter.exception;
+package org.ject.support.domain.recruit.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
