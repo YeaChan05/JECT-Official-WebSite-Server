@@ -6,8 +6,8 @@ import java.time.LocalTime;
 import org.ject.support.domain.member.JobFamily;
 import org.ject.support.domain.recruit.domain.Recruit;
 
-public record RecruitRegisterRequest(JobFamily jobFamily, LocalDate startDate, LocalDate endDate) {
-    public Recruit toEntity(Long ongoingSemesterId) {
+public record RecruitRegisterRequest(JobFamily jobFamily) {
+    public Recruit toEntity(Long ongoingSemesterId, final LocalDate startDate, final LocalDate endDate) {
         return Recruit.builder()
                 .semesterId(ongoingSemesterId)
                 .jobFamily(jobFamily)
