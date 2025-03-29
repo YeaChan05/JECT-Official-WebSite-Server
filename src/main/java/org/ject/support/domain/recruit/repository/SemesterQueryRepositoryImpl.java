@@ -14,7 +14,7 @@ public class SemesterQueryRepositoryImpl implements SemesterQueryRepository {
     public Optional<Long> findOngoingSemester() {
         queryFactory.select(semester.id)
                 .from(semester)
-                .where(semester.isOngoing.eq(true))
+                .where(semester.isRecruiting.eq(true))
                 .fetchOne();
         return Optional.empty();
     }
