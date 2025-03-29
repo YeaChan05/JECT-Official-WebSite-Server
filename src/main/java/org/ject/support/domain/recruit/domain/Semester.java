@@ -8,9 +8,11 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.ject.support.domain.base.BaseTimeEntity;
 
+@Getter
 @Entity
 @Table(name = "semester")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,12 +21,14 @@ import org.ject.support.domain.base.BaseTimeEntity;
 public class Semester extends BaseTimeEntity {
     @Id
     @GeneratedValue
-    @Column(name="semester_id")
+    @Column(name = "semester_id")
     private Long id;
 
-    @Column(name="semester_name", length = 20, nullable = false)
+    @Column(name = "semester_name", length = 20, nullable = false)
     private String name;
 
-    @Column(name="is_ongoing", nullable = false)
-    private Boolean isOngoing;
+    @Column(name = "is_recruiting", nullable = false)
+    @Builder.Default
+    private Boolean isRecruiting = true;
+
 }
