@@ -1,4 +1,4 @@
-package org.ject.support.domain.semseter.repository;
+package org.ject.support.domain.recruit.repository;
 
 import static org.ject.support.domain.recruit.domain.QSemester.semester;
 
