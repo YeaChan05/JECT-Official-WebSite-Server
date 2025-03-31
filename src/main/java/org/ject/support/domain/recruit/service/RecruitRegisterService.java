@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.ject.support.domain.recruit.domain.Recruit;
 import org.ject.support.domain.recruit.dto.RegisterRecruitEvent;
 import org.ject.support.domain.recruit.repository.RecruitRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -15,8 +16,8 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class RecruitRegisterService {
     private final RecruitRepository recruitRepository;
 
-    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)// recruit 저장 실패시 전체 트랜잭션 rollback
-    public void handleRegisterRecruitEvent(RegisterRecruitEvent event) {
+    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT, fallbackExecution = true)
+    public void handleRegisterRecruitEvent(RegisterRecruitEvent event) throws DataIntegrityViolationException {
         Long semesterId = event.id();
         LocalDate startDate = event.startDate();
         LocalDate endDate = event.endDate();
