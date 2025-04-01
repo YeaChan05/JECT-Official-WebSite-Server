@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.ject.support.domain.member.JobFamily;
@@ -58,8 +57,6 @@ class SemesterControllerTest {
         void register_semester() throws Exception {
             // given
             SemesterRegisterRequest request = new SemesterRegisterRequest("2023-2학기",
-                    LocalDate.now(),
-                    LocalDate.now().plusDays(1),
                     List.of(
                             new RecruitRegisterRequest(JobFamily.BE,
                                     LocalDateTime.of(2025, 4, 1, 0, 0),
@@ -93,8 +90,6 @@ class SemesterControllerTest {
         void register_semester_with_duplicate_jobFamily() throws Exception {
             // given
             SemesterRegisterRequest request = new SemesterRegisterRequest("2023-2학기",
-                    LocalDate.now(),
-                    LocalDate.now().plusDays(1),
                     List.of(
                             new RecruitRegisterRequest(JobFamily.BE,
                                     LocalDateTime.of(2025, 4, 1, 0, 0),
