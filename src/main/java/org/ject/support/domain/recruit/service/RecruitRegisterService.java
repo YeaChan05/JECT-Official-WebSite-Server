@@ -15,7 +15,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class RecruitRegisterService {
     private final RecruitRepository recruitRepository;
 
-    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT, fallbackExecution = true)
+    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void handleRegisterRecruitEvent(SemesterRegistered event) throws DataIntegrityViolationException {
         Long semesterId = event.semesterId();
         List<Recruit> recruits = event.recruitRegisterRequests().stream()
