@@ -20,7 +20,7 @@ public class SemesterController {
     private final SemesterRegisterUsecase semesterRegisterUsecase;
     private final SemesterInquiryUsecase semesterInquiryUsecase;
 
-    @PostMapping("/register")
+    @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void register(@RequestBody SemesterRegisterRequest request) {
         semesterRegisterUsecase.registerSemester(request);
