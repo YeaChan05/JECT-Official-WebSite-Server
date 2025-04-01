@@ -49,7 +49,7 @@ class SemesterControllerTest {
     private SemesterRepository semesterRepository;
 
     @Nested
-    @DisplayName("학기 등록 API 테스트")
+    @DisplayName("기수 등록 API 테스트")
     class SemesterRegisterTests {
         @Test
         @AuthenticatedUser(isAdmin = true)
