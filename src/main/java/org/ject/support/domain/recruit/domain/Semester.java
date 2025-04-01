@@ -3,6 +3,7 @@ package org.ject.support.domain.recruit.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -20,8 +21,7 @@ import org.ject.support.domain.base.BaseTimeEntity;
 @Builder
 public class Semester extends BaseTimeEntity {
     @Id
-    @GeneratedValue
-    @Column(name = "semester_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "semester_name", length = 20, nullable = false, unique = true)
