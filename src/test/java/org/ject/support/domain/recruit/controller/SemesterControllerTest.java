@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.ject.support.domain.member.JobFamily;
 import org.ject.support.domain.recruit.domain.Semester;
@@ -60,13 +61,17 @@ class SemesterControllerTest {
                     LocalDate.now(),
                     LocalDate.now().plusDays(1),
                     List.of(
-                            new RecruitRegisterRequest(JobFamily.BE),
-                            new RecruitRegisterRequest(JobFamily.FE)
-                    ));
+                            new RecruitRegisterRequest(JobFamily.BE,
+                                    LocalDateTime.of(2025, 4, 1, 0, 0),
+                                    LocalDateTime.of(2025, 4, 2, 0, 0)),
+                            new RecruitRegisterRequest(JobFamily.FE,
+                                    LocalDateTime.of(2025, 4, 1, 0, 0),
+                                    LocalDateTime.of(2025, 4, 2, 0, 0)
+                            )));
 
             String reqJson = objectMapper.writeValueAsString(request);
             // when
-            mockMvc.perform(post("/semesters/register")
+            mockMvc.perform(post("/semesters")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(reqJson))
                     .andExpect(status().isOk())
@@ -91,13 +96,17 @@ class SemesterControllerTest {
                     LocalDate.now(),
                     LocalDate.now().plusDays(1),
                     List.of(
-                            new RecruitRegisterRequest(JobFamily.BE),
-                            new RecruitRegisterRequest(JobFamily.BE)// 중복된 jobFamily
+                            new RecruitRegisterRequest(JobFamily.BE,
+                                    LocalDateTime.of(2025, 4, 1, 0, 0),
+                                    LocalDateTime.of(2025, 4, 2, 0, 0)),
+                            new RecruitRegisterRequest(JobFamily.BE,
+                                    LocalDateTime.of(2025, 4, 1, 0, 0),
+                                    LocalDateTime.of(2025, 4, 2, 0, 0))// 중복된 jobFamily
                     ));
 
             String reqJson = objectMapper.writeValueAsString(request);
             // when
-            mockMvc.perform(post("/semesters/register")
+            mockMvc.perform(post("/semesters")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(reqJson))
                     .andExpect(status().isOk())
