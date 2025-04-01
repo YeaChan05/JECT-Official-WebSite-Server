@@ -28,7 +28,7 @@ class RecruitTest {
     }
 
     @Test
-    @DisplayName("is invalid question id")
+    @DisplayName("is invalid question semesterId")
     void is_invalid_question_id() {
         // given
         Recruit recruit = Recruit.builder()

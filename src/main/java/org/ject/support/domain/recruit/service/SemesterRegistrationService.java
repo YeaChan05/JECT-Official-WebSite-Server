@@ -2,8 +2,8 @@ package org.ject.support.domain.recruit.service;
 
 import lombok.RequiredArgsConstructor;
 import org.ject.support.domain.recruit.domain.Semester;
-import org.ject.support.domain.recruit.dto.RegisterRecruitEvent;
 import org.ject.support.domain.recruit.dto.SemesterRegisterRequest;
+import org.ject.support.domain.recruit.dto.SemesterRegistered;
 import org.ject.support.domain.recruit.repository.SemesterRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class SemesterRegistrationService implements SemesterRegisterUsecase {
         semesterRepository.save(semester);
         // semester 기준으로 recruit 등록
         eventPublisher.publishEvent(
-                new RegisterRecruitEvent(semester.getId(),
+                new SemesterRegistered(semester.getId(),
                         request.startDate(),
                         request.endDate(),
                         request.recruitRegisterRequests()));

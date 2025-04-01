@@ -3,7 +3,7 @@ package org.ject.support.domain.recruit.service;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ject.support.domain.recruit.domain.Recruit;
-import org.ject.support.domain.recruit.dto.RegisterRecruitEvent;
+import org.ject.support.domain.recruit.dto.SemesterRegistered;
 import org.ject.support.domain.recruit.repository.RecruitRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -16,8 +16,8 @@ public class RecruitRegisterService {
     private final RecruitRepository recruitRepository;
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT, fallbackExecution = true)
-    public void handleRegisterRecruitEvent(RegisterRecruitEvent event) throws DataIntegrityViolationException {
-        Long semesterId = event.id();
+    public void handleRegisterRecruitEvent(SemesterRegistered event) throws DataIntegrityViolationException {
+        Long semesterId = event.semesterId();
         List<Recruit> recruits = event.recruitRegisterRequests().stream()
                 .map(request -> request.toEntity(semesterId))
                 .toList();

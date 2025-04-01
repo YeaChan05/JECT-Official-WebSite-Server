@@ -138,7 +138,7 @@ class ApplyControllerTest extends ApplicationPeriodTest {
     }
 
     @Test
-    @DisplayName("invalid question id")
+    @DisplayName("invalid question semesterId")
     @AuthenticatedUser
     @Transactional
     void invalid_question_id() throws Exception {
