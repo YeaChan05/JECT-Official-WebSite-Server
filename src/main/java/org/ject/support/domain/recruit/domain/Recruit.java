@@ -41,7 +41,7 @@ public class Recruit extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "semester_id", length = 10, nullable = false)
+    @Column(name = "semester_id", nullable = false)
     private Long semesterId;
 
     @Column(nullable = false)
