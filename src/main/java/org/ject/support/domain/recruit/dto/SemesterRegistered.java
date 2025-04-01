@@ -1,10 +1,6 @@
 package org.ject.support.domain.recruit.dto;
 
-import java.time.LocalDate;
 import java.util.List;
 
-public record SemesterRegistered(Long semesterId,
-                                 LocalDate startDate,
-                                 LocalDate endDate,
-                                 List<RecruitRegisterRequest> recruitRegisterRequests) {
+public record SemesterRegistered(Long semesterId, List<RecruitRegisterRequest> recruitRegisterRequests) {
 }

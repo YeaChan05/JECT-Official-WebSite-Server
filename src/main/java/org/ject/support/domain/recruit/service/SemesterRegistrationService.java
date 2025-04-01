@@ -28,10 +28,6 @@ public class SemesterRegistrationService implements SemesterRegisterUsecase {
 
         semesterRepository.save(semester);
         // semester 기준으로 recruit 등록
-        eventPublisher.publishEvent(
-                new SemesterRegistered(semester.getId(),
-                        request.startDate(),
-                        request.endDate(),
-                        request.recruitRegisterRequests()));
+        eventPublisher.publishEvent(new SemesterRegistered(semester.getId(), request.recruitRegisterRequests()));
     }
 }
