@@ -12,10 +12,9 @@ public class SemesterQueryRepositoryImpl implements SemesterQueryRepository {
 
     @Override
     public Optional<Long> findOngoingSemester() {
-        queryFactory.select(semester.id)
+        return Optional.ofNullable(queryFactory.select(semester.id)
                 .from(semester)
                 .where(semester.isRecruiting.eq(true))
-                .fetchOne();
-        return Optional.empty();
+                .fetchOne());
     }
 }
