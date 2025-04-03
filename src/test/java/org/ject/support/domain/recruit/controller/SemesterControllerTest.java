@@ -59,11 +59,11 @@ class SemesterControllerTest {
             SemesterRegisterRequest request = new SemesterRegisterRequest("2023-2학기",
                     List.of(
                             new RecruitRegisterRequest(JobFamily.BE,
-                                    LocalDateTime.of(2025, 4, 1, 0, 0),
-                                    LocalDateTime.of(2025, 4, 2, 0, 0)),
+                                    LocalDateTime.of(2025, 4, 1, 0, 0, 0),
+                                    LocalDateTime.of(2025, 4, 2, 0, 0, 0)),
                             new RecruitRegisterRequest(JobFamily.FE,
-                                    LocalDateTime.of(2025, 4, 1, 0, 0),
-                                    LocalDateTime.of(2025, 4, 2, 0, 0)
+                                    LocalDateTime.of(2025, 4, 1, 0, 0, 0),
+                                    LocalDateTime.of(2025, 4, 2, 0, 0, 0)
                             )));
 
             String reqJson = objectMapper.writeValueAsString(request);
@@ -92,11 +92,11 @@ class SemesterControllerTest {
             SemesterRegisterRequest request = new SemesterRegisterRequest("2023-2학기",
                     List.of(
                             new RecruitRegisterRequest(JobFamily.BE,
-                                    LocalDateTime.of(2025, 4, 1, 0, 0),
-                                    LocalDateTime.of(2025, 4, 2, 0, 0)),
+                                    LocalDateTime.of(2025, 4, 1, 0, 0, 0),
+                                    LocalDateTime.of(2025, 4, 2, 0, 0, 0)),
                             new RecruitRegisterRequest(JobFamily.BE,
-                                    LocalDateTime.of(2025, 4, 1, 0, 0),
-                                    LocalDateTime.of(2025, 4, 2, 0, 0))// 중복된 jobFamily
+                                    LocalDateTime.of(2025, 4, 1, 0, 0, 0),
+                                    LocalDateTime.of(2025, 4, 2, 0, 0, 0))// 중복된 jobFamily
                     ));
 
             String reqJson = objectMapper.writeValueAsString(request);
