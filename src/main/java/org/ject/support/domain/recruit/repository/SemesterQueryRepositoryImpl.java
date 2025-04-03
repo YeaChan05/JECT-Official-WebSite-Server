@@ -11,7 +11,7 @@ public class SemesterQueryRepositoryImpl implements SemesterQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Optional<Long> findOngoingSemester() {
+    public Optional<Long> findOngoingSemesterId() {
         return Optional.ofNullable(queryFactory.select(semester.id)
                 .from(semester)
                 .where(semester.isRecruiting.eq(true))

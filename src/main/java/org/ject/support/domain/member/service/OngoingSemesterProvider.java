@@ -12,7 +12,7 @@ public class OngoingSemesterProvider {
     private final SemesterRepository semesterRepository;
 
     public Long getOngoingSemesterId() {
-        return semesterRepository.findOngoingSemester()
+        return semesterRepository.findOngoingSemesterId()
                 .orElseThrow(() -> new SemesterException(SemesterErrorCode.ONGOING_SEMESTER_NOT_FOUND));
     }
 }
