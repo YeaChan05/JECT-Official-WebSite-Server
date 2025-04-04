@@ -70,9 +70,9 @@ class QuestionQueryRepositoryTest {
                 .inputType(inputType)
                 .isRequired(true)
                 .title("title")
-                .body("body")
+                .label("label")
                 .inputHint("inputHint")
-                .maxLength(500)
+                .maxTextLength(500)
                 .recruit(recruit)
                 .build();
     }
