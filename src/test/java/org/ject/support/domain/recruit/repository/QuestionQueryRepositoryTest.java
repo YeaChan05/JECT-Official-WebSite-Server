@@ -1,6 +1,7 @@
 package org.ject.support.domain.recruit.repository;
 
 import org.ject.support.domain.member.JobFamily;
+import org.ject.support.domain.project.entity.Project;
 import org.ject.support.domain.recruit.domain.Question;
 import org.ject.support.domain.recruit.domain.Recruit;
 import org.ject.support.domain.recruit.dto.QuestionResponse;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -53,6 +55,35 @@ class QuestionQueryRepositoryTest {
         assertThat(result).hasSize(3);
         assertThat(result).extracting(QuestionResponse::sequence)
                 .containsExactly(1, 2, 3);
+    }
+
+    @Test
+    @DisplayName("selectOptions가 List<String>와 JSON 문자열 간 정상 변환됨")
+    void convert_select_options() {
+        // given
+        List<String> selectOptions = List.of("재직", "재학", "졸업", "휴학");
+
+        LocalDateTime now = LocalDateTime.now();
+        Recruit recruit = createRecruit(now, FE);
+        recruitRepository.save(recruit);
+
+        Question question = Question.builder()
+                .sequence(1)
+                .inputType(Question.InputType.SELECT)
+                .isRequired(true)
+                .title("title")
+                .label("label")
+                .selectOptions(selectOptions)
+                .inputHint("inputHint")
+                .recruit(recruit)
+                .build();
+
+        // when
+        Question saved = questionRepository.save(question);
+        Question found = questionRepository.findById(saved.getId()).orElseThrow();
+
+        // then
+        assertThat(found.getSelectOptions()).containsExactly("재직", "재학", "졸업", "휴학");
     }
 
     private Recruit createRecruit(LocalDateTime now, JobFamily be) {
