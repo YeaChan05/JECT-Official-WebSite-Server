@@ -54,7 +54,7 @@ class QuestionControllerTest {
     @BeforeEach
     void setUp() {
         List<Question> questions = List.of(
-                Question.builder().sequence(1).inputType(TEXT).isRequired(true).title("title1").label("label").build(),
+                Question.builder().sequence(1).inputType(TEXT).isRequired(true).title("title1").label("label").selectOptions(List.of("a", "b", "c")).build(),
                 Question.builder().sequence(2).inputType(TEXT).isRequired(true).title("title2").label("label").build(),
                 Question.builder().sequence(3).inputType(TEXT).isRequired(true).title("title3").label("label").build(),
                 Question.builder().sequence(4).inputType(TEXT).isRequired(true).title("title4").label("label").build(),
@@ -100,5 +100,21 @@ class QuestionControllerTest {
         // then
         Long countExistingKeys = redisTemplate.countExistingKeys(List.of("question::BE"));
         Assertions.assertThat(countExistingKeys).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("지원서 문항 조회 시 선택지 문자열은 List 타입으로 변경")
+    @AuthenticatedUser
+    void convert_select_options() throws Exception {
+        // when, then
+        mockMvc.perform(get("/apply/questions")
+                        .param("jobFamily", "BE"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("SUCCESS")))
+                .andExpectAll(
+                        content().string(containsString("a")),
+                        content().string(containsString("b")),
+                        content().string(containsString("c")))
+                .andDo(print());
     }
 }
