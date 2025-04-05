@@ -32,7 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @IntegrationTest
 @AutoConfigureMockMvc
-@Transactional
 class QuestionControllerTest {
 
     @Autowired
