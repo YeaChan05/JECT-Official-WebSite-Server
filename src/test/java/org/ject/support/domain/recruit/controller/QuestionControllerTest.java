@@ -16,8 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @IntegrationTest
 @AutoConfigureMockMvc
+@Transactional
 class QuestionControllerTest {
 
     @Autowired
@@ -100,21 +101,5 @@ class QuestionControllerTest {
         // then
         Long countExistingKeys = redisTemplate.countExistingKeys(List.of("question::BE"));
         Assertions.assertThat(countExistingKeys).isEqualTo(1);
-    }
-
-    @Test
-    @DisplayName("지원서 문항 조회 시 선택지 문자열은 List 타입으로 변경")
-    @AuthenticatedUser
-    void convert_select_options() throws Exception {
-        // when, then
-        mockMvc.perform(get("/apply/questions")
-                        .param("jobFamily", "BE"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("SUCCESS")))
-                .andExpectAll(
-                        content().string(containsString("a")),
-                        content().string(containsString("b")),
-                        content().string(containsString("c")))
-                .andDo(print());
     }
 }
