@@ -19,6 +19,7 @@ import org.ject.support.domain.recruit.repository.RecruitRepository;
 import org.ject.support.domain.recruit.repository.SemesterRepository;
 import org.ject.support.testconfig.AuthenticatedUser;
 import org.ject.support.testconfig.IntegrationTest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,11 @@ class SemesterControllerTest {
     
     @Autowired
     private SemesterRepository semesterRepository;
+
+    @AfterEach
+    void tearDown() {
+        semesterRepository.deleteAll();
+    }
 
     @Test
     @AuthenticatedUser(isAdmin = true)
