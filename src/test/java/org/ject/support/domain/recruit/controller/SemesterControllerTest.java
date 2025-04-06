@@ -19,7 +19,7 @@ import org.ject.support.domain.recruit.repository.RecruitRepository;
 import org.ject.support.domain.recruit.repository.SemesterRepository;
 import org.ject.support.testconfig.AuthenticatedUser;
 import org.ject.support.testconfig.IntegrationTest;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +45,12 @@ class SemesterControllerTest {
     @Autowired
     private SemesterRepository semesterRepository;
 
-    @AfterEach
-    void tearDown() {
+    @BeforeEach
+    void setUp() {
+        recruitRepository.deleteAll();
         semesterRepository.deleteAll();
+        TestTransaction.flagForCommit();
+        TestTransaction.end();
     }
 
     @Test
@@ -74,8 +77,6 @@ class SemesterControllerTest {
                 .andExpect(
                         content().string(containsString("SUCCESS"))
                 );
-        TestTransaction.flagForCommit();
-        TestTransaction.end();
 
         // then
         assertThat(semesterRepository.findAll()).hasSize(1);
