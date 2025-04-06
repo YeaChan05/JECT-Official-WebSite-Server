@@ -72,7 +72,7 @@ class ApplyControllerTest extends ApplicationPeriodTest {
         Recruit recruit = Recruit.builder()
                 .startDate(LocalDateTime.now().minusDays(1))
                 .endDate(LocalDateTime.now().plusDays(1))
-                .semester("2025-1")
+                .semesterId(1L)
                 .jobFamily(JobFamily.BE)
                 .build();
 
@@ -88,7 +88,7 @@ class ApplyControllerTest extends ApplicationPeriodTest {
                 .name("김젝트")
                 .role(USER)
                 .phoneNumber("01012345678")
-                .semester("2025-1")
+                .semesterId(1L)
                 .pin("123456") // PIN 필드 추가
                 .build();
         memberRepository.save(member);
@@ -139,7 +139,7 @@ class ApplyControllerTest extends ApplicationPeriodTest {
     }
 
     @Test
-    @DisplayName("invalid question id")
+    @DisplayName("invalid question semesterId")
     @AuthenticatedUser
     @Transactional
     void invalid_question_id() throws Exception {
