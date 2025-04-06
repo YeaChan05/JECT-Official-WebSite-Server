@@ -12,6 +12,8 @@ import java.util.List;
 
 public class StringListConverter implements AttributeConverter<List<String>, String> {
 
+    private static final TypeReference<List<String>> LIST_TYPE_REFERENCE = new TypeReference<>() {};
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
@@ -32,8 +34,7 @@ public class StringListConverter implements AttributeConverter<List<String>, Str
             return null;
         }
         try {
-            return objectMapper.readValue(dbData, new TypeReference<>() {
-            });
+            return objectMapper.readValue(dbData, LIST_TYPE_REFERENCE);
         } catch (JsonProcessingException e) {
             throw new GlobalException(GlobalErrorCode.JSON_MARSHALLING_FAILURE);
         }
