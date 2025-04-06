@@ -8,9 +8,9 @@ import org.ject.support.domain.recruit.dto.ApplyTemporaryResponse;
 import org.ject.support.domain.recruit.dto.SubmitApplicationRequest;
 import org.ject.support.domain.recruit.service.ApplyUsecase;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,10 +36,10 @@ public class ApplyController {
         applyUsecase.applyTemporary(jobFamily, memberId, request.answers(), request.portfolios());
     }
 
-    @PutMapping("/job")
+    @DeleteMapping("/temp")
     @PreAuthorize("hasRole('ROLE_TEMP')")
-    public void changeJobFamily(@AuthPrincipal Long memberId, @RequestBody JobFamily newJobFamily) {
-        applyUsecase.changeJobFamily(memberId, newJobFamily);
+    public void deleteTemporaryApplications(@AuthPrincipal Long memberId) {
+        applyUsecase.deleteTemporaryApplications(memberId);
     }
 
     @PostMapping("/submit")
