@@ -1,13 +1,5 @@
 package org.ject.support.domain.recruit.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.ject.support.domain.member.JobFamily.BE;
-import static org.ject.support.domain.member.JobFamily.FE;
-import static org.ject.support.domain.recruit.domain.Question.InputType.FILE;
-import static org.ject.support.domain.recruit.domain.Question.InputType.TEXT;
-
-import java.time.LocalDateTime;
-import java.util.List;
 import org.ject.support.domain.member.JobFamily;
 import org.ject.support.domain.recruit.domain.Question;
 import org.ject.support.domain.recruit.domain.Recruit;
@@ -18,6 +10,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.ject.support.domain.member.JobFamily.BE;
+import static org.ject.support.domain.member.JobFamily.FE;
+import static org.ject.support.domain.recruit.domain.Question.InputType.FILE;
+import static org.ject.support.domain.recruit.domain.Question.InputType.TEXT;
 
 @Import(QueryDslTestConfig.class)
 @DataJpaTest
@@ -54,6 +55,35 @@ class QuestionQueryRepositoryTest {
                 .containsExactly(1, 2, 3);
     }
 
+    @Test
+    @DisplayName("selectOptions가 List<String>와 JSON 문자열 간 정상 변환됨")
+    void convert_select_options() {
+        // given
+        List<String> selectOptions = List.of("재직", "재학", "졸업", "휴학");
+
+        LocalDateTime now = LocalDateTime.now();
+        Recruit recruit = createRecruit(now, FE);
+        recruitRepository.save(recruit);
+
+        Question question = Question.builder()
+                .sequence(1)
+                .inputType(Question.InputType.SELECT)
+                .isRequired(true)
+                .title("title")
+                .label("label")
+                .selectOptions(selectOptions)
+                .inputHint("inputHint")
+                .recruit(recruit)
+                .build();
+
+        // when
+        Question saved = questionRepository.save(question);
+        Question found = questionRepository.findById(saved.getId()).orElseThrow();
+
+        // then
+        assertThat(found.getSelectOptions()).containsExactly("재직", "재학", "졸업", "휴학");
+    }
+
     private Recruit createRecruit(LocalDateTime now, JobFamily be) {
         return Recruit.builder()
                 .semesterId(1L)
@@ -69,9 +99,9 @@ class QuestionQueryRepositoryTest {
                 .inputType(inputType)
                 .isRequired(true)
                 .title("title")
-                .body("body")
+                .label("label")
                 .inputHint("inputHint")
-                .maxLength(500)
+                .maxTextLength(500)
                 .recruit(recruit)
                 .build();
     }
