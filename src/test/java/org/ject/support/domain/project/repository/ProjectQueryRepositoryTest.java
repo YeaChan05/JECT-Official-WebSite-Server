@@ -44,14 +44,14 @@ class ProjectQueryRepositoryTest {
     @DisplayName("기수별 프로젝트 목록 조회")
     void find_projects_by_semester() {
         // given
-        Project project1 = createProject(MAIN, "1기", team1);
-        Project project2 = createProject(MAIN, "1기", team2);
-        Project project3 = createProject(MAIN, "2기", team3);
+        Project project1 = createProject(MAIN, 1L, team1);
+        Project project2 = createProject(MAIN, 1L, team2);
+        Project project3 = createProject(MAIN, 2L, team3);
         projectRepository.saveAll(List.of(project1, project2, project3));
 
         // when
         Page<ProjectResponse> result =
-                projectRepository.findProjectsByCategoryAndSemester(MAIN, "1기", PageRequest.of(0, 30));
+                projectRepository.findProjectsByCategoryAndSemester(MAIN, 1L, PageRequest.of(0, 30));
 
         // then
         assertThat(result).isNotNull();
@@ -71,15 +71,15 @@ class ProjectQueryRepositoryTest {
     @DisplayName("특정 년월에 진행한 해커톤 프로젝트 목록 조회")
     void find_hackathon_projects() {
         // given
-        Project project1 = createProject(MAIN, "1기", team1);
-        Project project2 = createProject(HACKATHON, "25.03", team2);
-        Project project3 = createProject(HACKATHON, "25.03", team3);
-        Project project4 = createProject(HACKATHON, "25.08", team1);
+        Project project1 = createProject(MAIN, 1L, team1);
+        Project project2 = createProject(HACKATHON, 2L, team2);
+        Project project3 = createProject(HACKATHON, 2L, team3);
+        Project project4 = createProject(HACKATHON, 3L, team1);
         projectRepository.saveAll(List.of(project1, project2, project3, project4));
 
         // when
         Page<ProjectResponse> result =
-                projectRepository.findProjectsByCategoryAndSemester(HACKATHON, "25.03", PageRequest.of(0, 30));
+                projectRepository.findProjectsByCategoryAndSemester(HACKATHON, 2L, PageRequest.of(0, 30));
 
         // then
         assertThat(result.getContent()).hasSize(2);
@@ -94,7 +94,7 @@ class ProjectQueryRepositoryTest {
         Project project = Project.builder()
                 .name("name")
                 .category(Project.Category.MAIN)
-                .semester("2025-1")
+                .semesterId(1L)
                 .summary("summary")
                 .techStack(techStack)
                 .startDate(LocalDate.of(2025, 3, 1))
@@ -110,11 +110,11 @@ class ProjectQueryRepositoryTest {
         assertThat(found.getTechStack()).containsExactly("Java", "Spring Boot", "MySQL", "JPA");
     }
 
-    private Project createProject(Project.Category category, String semester, Team team) {
+    private Project createProject(Project.Category category, Long semesterId, Team team) {
         return Project.builder()
                 .name("projectName")
                 .thumbnailUrl("https://test.net/thumbnail.png")
-                .semester(semester)
+                .semesterId(semesterId)
                 .summary("summary")
                 .description("description")
                 .startDate(LocalDate.of(2025, 3, 2))

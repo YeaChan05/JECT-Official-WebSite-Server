@@ -32,9 +32,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.ject.support.domain.member.Role.USER;
 import static org.ject.support.domain.recruit.domain.Question.InputType.TEXT;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -72,7 +72,7 @@ class ApplyControllerTest extends ApplicationPeriodTest {
         Recruit recruit = Recruit.builder()
                 .startDate(LocalDateTime.now().minusDays(1))
                 .endDate(LocalDateTime.now().plusDays(1))
-                .semester("2025-1")
+                .semesterId(1L)
                 .jobFamily(JobFamily.BE)
                 .build();
 
@@ -88,7 +88,7 @@ class ApplyControllerTest extends ApplicationPeriodTest {
                 .name("김젝트")
                 .role(USER)
                 .phoneNumber("01012345678")
-                .semester("2025-1")
+                .semesterId(1L)
                 .pin("123456") // PIN 필드 추가
                 .build();
         memberRepository.save(member);
@@ -139,7 +139,7 @@ class ApplyControllerTest extends ApplicationPeriodTest {
     }
 
     @Test
-    @DisplayName("invalid question id")
+    @DisplayName("invalid question semesterId")
     @AuthenticatedUser
     @Transactional
     void invalid_question_id() throws Exception {
@@ -196,9 +196,9 @@ class ApplyControllerTest extends ApplicationPeriodTest {
     }
 
     @Test
-    @DisplayName("change job family")
+    @DisplayName("delete temp application")
     @AuthenticatedUser
-    void change_job_family() throws Exception {
+    void delete_temp_application() throws Exception {
         // given
         temporaryApplicationRepository.save(new TemporaryApplication("1", Map.of(
                 "8", "answer 1-1 for 8",
@@ -222,9 +222,8 @@ class ApplyControllerTest extends ApplicationPeriodTest {
                 "10", "answer 2-2 for 10"), "BE", List.of(createApplyTemporaryPortfolio("1"))));
 
         // when, then
-        mockMvc.perform(put("/apply/job")
+        mockMvc.perform(delete("/apply/temp")
                         .contentType("application/json")
-                        .content("\"FE\"")
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("SUCCESS")))

@@ -1,7 +1,6 @@
 package org.ject.support.domain.recruit.repository;
 
 import org.ject.support.domain.member.JobFamily;
-import org.ject.support.domain.project.entity.Project;
 import org.ject.support.domain.recruit.domain.Question;
 import org.ject.support.domain.recruit.domain.Recruit;
 import org.ject.support.domain.recruit.dto.QuestionResponse;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -88,7 +86,7 @@ class QuestionQueryRepositoryTest {
 
     private Recruit createRecruit(LocalDateTime now, JobFamily be) {
         return Recruit.builder()
-                .semester("1기")
+                .semesterId(1L)
                 .startDate(now.minusDays(1))
                 .endDate(now.plusDays(1))
                 .jobFamily(be)

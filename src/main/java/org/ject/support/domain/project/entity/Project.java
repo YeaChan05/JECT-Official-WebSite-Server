@@ -1,18 +1,6 @@
 package org.ject.support.domain.project.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,8 +32,8 @@ public class Project extends BaseTimeEntity {
     @Column(columnDefinition = "varchar(30)", nullable = false)
     private Project.Category category;
 
-    @Column(length = 20, nullable = false)
-    private String semester;
+    @Column(nullable = false)
+    private Long semesterId;
 
     @Column(length = 100, nullable = false)
     private String summary;
