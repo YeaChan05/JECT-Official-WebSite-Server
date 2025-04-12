@@ -41,6 +41,11 @@ public class RecruitService implements RecruitUsecase {
     public void updateRecruit(Long recruitId, RecruitUpdateRequest request) {
         Recruit recruit = recruitRepository.findById(recruitId)
                 .orElseThrow(() -> new RecruitException(RecruitErrorCode.NOT_FOUND));
+
+        if (recruit.isClosed()) {
+            throw new RecruitException(RecruitErrorCode.UPDATE_NOT_ALLOW_FOR_CLOSED);
+        }
+
         recruit.update(request.jobFamily(), request.startDate(), request.endDate());
     }
 

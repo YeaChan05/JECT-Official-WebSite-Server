@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.ject.support.domain.recruit.domain.Recruit.Status.CLOSED;
 import static org.ject.support.domain.recruit.domain.Recruit.Status.WAITING;
 
 @Getter
@@ -84,7 +85,11 @@ public class Recruit extends BaseTimeEntity {
         this.endDate = endDate;
     }
 
-    enum Status {
+    public boolean isClosed() {
+        return status == CLOSED;
+    }
+
+    public enum Status {
         WAITING, OPEN, CLOSED
     }
 }
