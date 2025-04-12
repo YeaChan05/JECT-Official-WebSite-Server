@@ -26,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.ject.support.domain.member.JobFamily.BE;
 import static org.ject.support.domain.member.JobFamily.FE;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @IntegrationTest
@@ -74,7 +75,7 @@ class RecruitControllerTest {
         String reqJson = objectMapper.writeValueAsString(requests);
 
         // when
-        mockMvc.perform(MockMvcRequestBuilders.post("/recruits")
+        mockMvc.perform(post("/recruits")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(reqJson))
                 .andExpect(content().string(containsString("SUCCESS")));
@@ -103,7 +104,7 @@ class RecruitControllerTest {
         String reqJson = objectMapper.writeValueAsString(requests);
 
         // when, then
-        mockMvc.perform(MockMvcRequestBuilders.post("/recruits")
+        mockMvc.perform(post("/recruits")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(reqJson))
                 .andExpect(content().string(containsString("DUPLICATED_JOB_FAMILY")));
@@ -125,7 +126,7 @@ class RecruitControllerTest {
                 new RecruitUpdateRequest(FE, LocalDateTime.now().minusDays(1), LocalDateTime.now().plusDays(1)));
 
         // when
-        mockMvc.perform(MockMvcRequestBuilders.put("/recruits/{recruitId}", savedRecruit.getId())
+        mockMvc.perform(put("/recruits/{recruitId}", savedRecruit.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(reqJson))
                 .andExpect(content().string(containsString("SUCCESS")));
@@ -133,5 +134,26 @@ class RecruitControllerTest {
         // then
         Recruit updatedRecruit = recruitRepository.findById(savedRecruit.getId()).orElseThrow();
         assertThat(updatedRecruit.getJobFamily()).isEqualTo(FE);
+    }
+
+    @Test
+    @DisplayName("모집 취소")
+    void cancel_recruit() throws Exception {
+        // given
+        Long semesterId = semesterRepository.findOngoingSemesterId().orElse(1L);
+        Recruit savedRecruit = recruitRepository.save(Recruit.builder()
+                .semesterId(semesterId)
+                .startDate(LocalDateTime.now().minusDays(1))
+                .endDate(LocalDateTime.now().plusDays(1))
+                .jobFamily(BE)
+                .build());
+
+        // when
+        mockMvc.perform(delete("/recruits/{recruitId}", savedRecruit.getId()))
+                .andExpect(content().string(containsString("SUCCESS")));
+
+        // then
+        List<Recruit> recruits = recruitRepository.findActiveRecruits(LocalDateTime.now());
+        assertThat(recruits).isEmpty();
     }
 }

@@ -49,6 +49,11 @@ public class RecruitService implements RecruitUsecase {
         recruit.update(request.jobFamily(), request.startDate(), request.endDate());
     }
 
+    @Override
+    public void cancelRecruit(Long recruitId) {
+        recruitRepository.deleteById(recruitId);
+    }
+
     private void validateDuplicatedJobFamily(List<RecruitRegisterRequest> requests, Long ongoingSemesterId) {
         List<JobFamily> jobFamilies = requests.stream()
                 .map(RecruitRegisterRequest::jobFamily)

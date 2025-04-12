@@ -16,4 +16,9 @@ public interface RecruitUsecase {
      * 모집 정보를 수정합니다.
      */
     void updateRecruit(Long recruitId, RecruitUpdateRequest request);
+
+    /**
+     * 모집을 취소합니다.
+     */
+    void cancelRecruit(Long recruitId);
 }

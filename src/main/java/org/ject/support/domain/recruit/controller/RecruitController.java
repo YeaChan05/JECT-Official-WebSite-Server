@@ -5,6 +5,7 @@ import org.ject.support.domain.recruit.dto.RecruitRegisterRequest;
 import org.ject.support.domain.recruit.dto.RecruitUpdateRequest;
 import org.ject.support.domain.recruit.service.RecruitUsecase;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,5 +32,11 @@ public class RecruitController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void updateRecruit(@PathVariable Long recruitId, @RequestBody RecruitUpdateRequest request) {
         recruitUsecase.updateRecruit(recruitId, request);
+    }
+
+    @DeleteMapping("/{recruitId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void cancelRecruit(@PathVariable Long recruitId) {
+        recruitUsecase.cancelRecruit(recruitId);
     }
 }
