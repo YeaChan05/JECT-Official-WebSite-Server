@@ -5,15 +5,18 @@ import org.ject.support.domain.member.JobFamily;
 import org.ject.support.domain.member.service.OngoingSemesterProvider;
 import org.ject.support.domain.recruit.domain.Recruit;
 import org.ject.support.domain.recruit.dto.RecruitRegisterRequest;
+import org.ject.support.domain.recruit.dto.RecruitUpdateRequest;
 import org.ject.support.domain.recruit.exception.RecruitErrorCode;
 import org.ject.support.domain.recruit.exception.RecruitException;
 import org.ject.support.domain.recruit.repository.RecruitRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RecruitService implements RecruitUsecase {
 
     private final RecruitRepository recruitRepository;
@@ -32,6 +35,13 @@ public class RecruitService implements RecruitUsecase {
                 .map(request -> request.toEntity(ongoingSemesterId))
                 .toList();
         recruitRepository.saveAll(recruits);
+    }
+
+    @Override
+    public void updateRecruit(Long recruitId, RecruitUpdateRequest request) {
+        Recruit recruit = recruitRepository.findById(recruitId)
+                .orElseThrow(() -> new RecruitException(RecruitErrorCode.NOT_FOUND));
+        recruit.update(request.jobFamily(), request.startDate(), request.endDate());
     }
 
     private void validateDuplicatedJobFamily(List<RecruitRegisterRequest> requests, Long ongoingSemesterId) {

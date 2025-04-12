@@ -78,6 +78,12 @@ public class Recruit extends BaseTimeEntity {
         return questions.stream().noneMatch(question -> question.getId().equals(questionId));
     }
 
+    public void update(JobFamily jobFamily, LocalDateTime startDate, LocalDateTime endDate) {
+        this.jobFamily = jobFamily;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
     enum Status {
         WAITING, OPEN, CLOSED
     }
