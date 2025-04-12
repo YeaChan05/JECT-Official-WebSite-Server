@@ -11,11 +11,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,12 +20,13 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.ject.support.domain.base.BaseTimeEntity;
 import org.ject.support.domain.member.JobFamily;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Entity
 @Builder
-@Table(uniqueConstraints = {
-        @UniqueConstraint(name = "uq_recruit_semester_job_family", columnNames = {"semester_id", "job_family"})
-})
 @DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
