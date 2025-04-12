@@ -24,6 +24,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.ject.support.domain.recruit.domain.Recruit.Status.WAITING;
+
 @Getter
 @Entity
 @Builder
@@ -50,6 +52,11 @@ public class Recruit extends BaseTimeEntity {
     @Column(name = "job_family", columnDefinition = "varchar(45)", nullable = false)
     private JobFamily jobFamily;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", columnDefinition = "varchar(10)", nullable = false)
+    @Builder.Default
+    private Status status = WAITING;
+
     @OneToMany(mappedBy = "recruit", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Question> questions = new ArrayList<>();
@@ -69,5 +76,9 @@ public class Recruit extends BaseTimeEntity {
 
     public boolean isInvalidQuestionId(final Long questionId) {
         return questions.stream().noneMatch(question -> question.getId().equals(questionId));
+    }
+
+    enum Status {
+        WAITING, OPEN, CLOSED
     }
 }
