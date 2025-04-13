@@ -24,9 +24,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.ject.support.domain.recruit.domain.Recruit.Status.CLOSED;
-import static org.ject.support.domain.recruit.domain.Recruit.Status.WAITING;
-
 @Getter
 @Entity
 @Builder
@@ -53,10 +50,9 @@ public class Recruit extends BaseTimeEntity {
     @Column(name = "job_family", columnDefinition = "varchar(45)", nullable = false)
     private JobFamily jobFamily;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", columnDefinition = "varchar(10)", nullable = false)
+    @Column(name = "is_closed", nullable = false)
     @Builder.Default
-    private Status status = WAITING;
+    private Boolean isClosed = false;
 
     @OneToMany(mappedBy = "recruit", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
@@ -86,10 +82,6 @@ public class Recruit extends BaseTimeEntity {
     }
 
     public boolean isClosed() {
-        return status == CLOSED;
-    }
-
-    public enum Status {
-        WAITING, OPEN, CLOSED
+        return this.isClosed;
     }
 }

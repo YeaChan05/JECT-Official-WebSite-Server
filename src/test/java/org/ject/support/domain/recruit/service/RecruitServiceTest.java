@@ -16,9 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.ject.support.domain.member.JobFamily.*;
 import static org.ject.support.domain.member.JobFamily.BE;
-import static org.ject.support.domain.recruit.domain.Recruit.Status.*;
+import static org.ject.support.domain.member.JobFamily.FE;
 
 @ExtendWith(MockitoExtension.class)
 class RecruitServiceTest {
@@ -38,7 +37,7 @@ class RecruitServiceTest {
                 .startDate(LocalDateTime.now().minusDays(1))
                 .endDate(LocalDateTime.now().plusDays(1))
                 .jobFamily(BE)
-                .status(CLOSED)
+                .isClosed(true)
                 .build();
 
         Mockito.when(recruitRepository.findById(1L)).thenReturn(Optional.ofNullable(recruit));

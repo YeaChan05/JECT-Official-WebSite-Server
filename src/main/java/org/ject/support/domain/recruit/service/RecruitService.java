@@ -58,7 +58,7 @@ public class RecruitService implements RecruitUsecase {
         List<JobFamily> jobFamilies = requests.stream()
                 .map(RecruitRegisterRequest::jobFamily)
                 .toList();
-        if (recruitRepository.existsByJobFamilyAndStatusIsNotClosed(ongoingSemesterId, jobFamilies)) {
+        if (recruitRepository.existsByJobFamilyAndIsNotClosed(ongoingSemesterId, jobFamilies)) {
             throw new RecruitException(RecruitErrorCode.DUPLICATED_JOB_FAMILY);
         }
     }
