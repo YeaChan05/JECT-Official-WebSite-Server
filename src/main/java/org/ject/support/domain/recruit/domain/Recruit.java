@@ -52,7 +52,7 @@ public class Recruit extends BaseTimeEntity {
 
     @Column(name = "is_closed", nullable = false)
     @Builder.Default
-    private Boolean isClosed = false;
+    private boolean isClosed = false;
 
     @OneToMany(mappedBy = "recruit", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
@@ -79,9 +79,5 @@ public class Recruit extends BaseTimeEntity {
         this.jobFamily = jobFamily;
         this.startDate = startDate;
         this.endDate = endDate;
-    }
-
-    public boolean isClosed() {
-        return this.isClosed;
     }
 }
