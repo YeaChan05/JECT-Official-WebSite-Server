@@ -6,6 +6,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 
 import static org.ject.support.domain.recruit.dto.Constants.RECRUIT_FLAG_PREFIX;
 
@@ -19,7 +20,7 @@ public class RecruitFlagService {
         redisTemplate.opsForValue().set(
                 String.format("%s%s", RECRUIT_FLAG_PREFIX, recruit.getJobFamily().name()),
                 Boolean.TRUE.toString(),
-                Duration.between(recruit.getStartDate(), recruit.getEndDate())
+                Duration.between(LocalDateTime.now(), recruit.getEndDate())
         );
     }
 }
