@@ -34,10 +34,9 @@ class RecruitServiceTest {
         // given
         Recruit recruit = Recruit.builder()
                 .semesterId(1L)
-                .startDate(LocalDateTime.now().minusDays(1))
-                .endDate(LocalDateTime.now().plusDays(1))
+                .startDate(LocalDateTime.now().minusDays(3))
+                .endDate(LocalDateTime.now().minusDays(1))
                 .jobFamily(BE)
-                .isClosed(true)
                 .build();
 
         Mockito.when(recruitRepository.findById(1L)).thenReturn(Optional.ofNullable(recruit));

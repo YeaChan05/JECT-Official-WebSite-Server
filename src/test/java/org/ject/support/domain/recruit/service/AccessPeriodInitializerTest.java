@@ -39,6 +39,8 @@ class AccessPeriodInitializerTest {
     @DisplayName("애플리케이션 구동 시 RECRUIT_FLAG 세팅")
     void set_recruit_flag_by_run_application() {
         // given
+        redisTemplate.delete(List.of("RECRUIT_FLAG:PM", "RECRUIT_FLAG:PD", "RECRUIT_FLAG:FE", "RECRUIT_FLAG:BE"));
+
         recruitRepository.saveAll(List.of(
                 Recruit.builder()
                         .semesterId(1L)
