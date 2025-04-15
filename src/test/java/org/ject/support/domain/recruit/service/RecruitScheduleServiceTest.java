@@ -1,60 +1,64 @@
 package org.ject.support.domain.recruit.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
+import org.ject.support.domain.member.JobFamily;
+import org.ject.support.domain.recruit.domain.Recruit;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.scheduling.TaskScheduler;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import org.ject.support.domain.member.JobFamily;
-import org.ject.support.domain.recruit.domain.Recruit;
-import org.ject.support.domain.recruit.dto.Constants;
-import org.ject.support.domain.recruit.repository.RecruitRepository;
-import org.ject.support.testconfig.IntegrationTest;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.scheduling.TaskScheduler;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import java.time.ZoneId;
 
-@IntegrationTest
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+
+@ExtendWith(MockitoExtension.class)
 class RecruitScheduleServiceTest {
-    @Autowired
-    private RecruitRepository recruitRepository;
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    @InjectMocks
+    RecruitScheduleService recruitScheduleService;
 
-    @MockitoBean
-    private TaskScheduler recruitScheduler;
+    @Mock
+    TaskScheduler recruitScheduler;
+
+    @Mock
+    RecruitFlagService recruitFlagService;
 
     @Test
-    @DisplayName("recruit schedule end date")
-    void test_schedule_end_date_of_recruit() {
+    @DisplayName("schedule recruit open at start date")
+    void schedule_recruit_open_at_start_date() {
         // given
         Recruit recruit = Recruit.builder()
+                .id(1L)
                 .semesterId(1L)
                 .jobFamily(JobFamily.BE)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now().plusDays(1))
+                .startDate(LocalDateTime.now().plusDays(3))
+                .endDate(LocalDateTime.now().plusDays(5))
                 .build();
-        recruitRepository.save(recruit);
 
-        // 스케줄 등록 직후
-        Boolean beforeScheduleFinishedFlag = Boolean.valueOf(redisTemplate.opsForValue().get(Constants.PERIOD_FLAG));
-        assertThat(beforeScheduleFinishedFlag).isTrue();
-
-        // scheduling 매개변수 stubbing
         ArgumentCaptor<Runnable> runnableCaptor = ArgumentCaptor.forClass(Runnable.class);
         ArgumentCaptor<Instant> instantCaptor = ArgumentCaptor.forClass(Instant.class);
+
+        // when
+        recruitScheduleService.scheduleRecruitOpen(recruit);
+
+        // then
         verify(recruitScheduler).schedule(runnableCaptor.capture(), instantCaptor.capture());
 
-        runnableCaptor.getValue().run();
+        Runnable scheduledTask = runnableCaptor.getValue();
+        Instant triggerTime = instantCaptor.getValue();
 
-        // 스케줄링 동작 후
-        Boolean afterScheduleFinishedFlag = Boolean.valueOf(redisTemplate.opsForValue().get(Constants.PERIOD_FLAG));
-        assertThat(afterScheduleFinishedFlag).isFalse();
+        Instant expectedTriggerTime = recruit.getStartDate().atZone(ZoneId.systemDefault()).toInstant();
 
+        assertThat(triggerTime).isEqualTo(expectedTriggerTime);
+
+        scheduledTask.run();
+        verify(recruitFlagService).setRecruitFlag(recruit);
     }
 }

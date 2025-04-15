@@ -5,5 +5,5 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Constants {
-    public static final String PERIOD_FLAG = "PERIOD_FLAG";
+    public static final String RECRUIT_FLAG_PREFIX = "RECRUIT_FLAG:";
 }

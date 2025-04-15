@@ -38,7 +38,7 @@ public class S3Service {
     /**
      * 지원자가 첨부한 포트폴리오 파일 이름과 해당 지원자의 식별자를 토대로 Pre-signed URL 생성
      */
-    @PeriodAccessible
+    @PeriodAccessible(permitAllJob = true)
     public List<UploadFileResponse> uploadPortfolios(Long memberId, List<UploadFileRequest> requests) {
         validatePortfolioExtension(requests);
         validatePortfolioSize(requests);

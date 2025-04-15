@@ -1,15 +1,5 @@
 package org.ject.support.domain.file.controller;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.ject.support.domain.member.Role.USER;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.time.LocalDateTime;
-import org.ject.support.domain.member.JobFamily;
 import org.ject.support.domain.member.entity.Member;
 import org.ject.support.domain.member.repository.MemberRepository;
 import org.ject.support.domain.recruit.domain.Recruit;
@@ -26,6 +16,20 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.ject.support.domain.member.JobFamily.BE;
+import static org.ject.support.domain.member.JobFamily.FE;
+import static org.ject.support.domain.member.JobFamily.PD;
+import static org.ject.support.domain.member.JobFamily.PM;
+import static org.ject.support.domain.member.Role.USER;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IntegrationTest
 @AutoConfigureMockMvc
@@ -47,7 +51,7 @@ class FileControllerTest extends ApplicationPeriodTest {
     void setUp() {
         member = Member.builder()
                 .email("test32@gmail.com")
-                .jobFamily(JobFamily.BE)
+                .jobFamily(BE)
                 .name("홍길동") // 한글 1~5글자로 수정
                 .role(USER)
                 .phoneNumber("01012345678") // 010으로 시작하는 11자리 수정
@@ -63,7 +67,7 @@ class FileControllerTest extends ApplicationPeriodTest {
     @Transactional
     void test_access_period() throws Exception {
         recruitRepository.save(Recruit.builder()
-                .jobFamily(JobFamily.BE)
+                .jobFamily(BE)
                 .semesterId(1L)
                 .startDate(LocalDateTime.now().minusDays(1))
                 .endDate(LocalDateTime.now().plusDays(1))
@@ -84,13 +88,21 @@ class FileControllerTest extends ApplicationPeriodTest {
     void not_in_period() throws Exception {
         // given
         recruitRepository.save(Recruit.builder()
-                .jobFamily(JobFamily.BE)
+                .jobFamily(BE)
                 .semesterId(1L)
                 .startDate(LocalDateTime.now().plusDays(3))
                 .endDate(LocalDateTime.now().plusDays(5))
                 .build());
 
-        when(redisTemplate.opsForValue().get(Constants.PERIOD_FLAG)).thenReturn(Boolean.toString(false));
+        when(redisTemplate.opsForValue().get(String.format("%s%s", Constants.RECRUIT_FLAG_PREFIX, PM.name())))
+                .thenReturn(Boolean.toString(false));
+        when(redisTemplate.opsForValue().get(String.format("%s%s", Constants.RECRUIT_FLAG_PREFIX, PD.name())))
+                .thenReturn(Boolean.toString(false));
+        when(redisTemplate.opsForValue().get(String.format("%s%s", Constants.RECRUIT_FLAG_PREFIX, FE.name())))
+                .thenReturn(Boolean.toString(false));
+        when(redisTemplate.opsForValue().get(String.format("%s%s", Constants.RECRUIT_FLAG_PREFIX, BE.name())))
+                .thenReturn(Boolean.toString(false));
+
         // then
         mockMvc.perform(post("/upload/portfolios")
                         .contentType("application/json")
@@ -105,16 +117,6 @@ class FileControllerTest extends ApplicationPeriodTest {
     @AuthenticatedUser
     @Transactional
     void invalid_portfolio_content_type() throws Exception {
-        // given
-        recruitRepository.save(Recruit.builder()
-                .jobFamily(JobFamily.BE)
-                .semesterId(1L)
-                .startDate(LocalDateTime.now().plusDays(3))
-                .endDate(LocalDateTime.now().plusDays(5))
-                .build());
-
-        when(redisTemplate.opsForValue().get(Constants.PERIOD_FLAG)).thenReturn(Boolean.toString(false));
-
         // when, then
         mockMvc.perform(post("/upload/portfolios")
                         .contentType("application/json")
@@ -128,7 +130,7 @@ class FileControllerTest extends ApplicationPeriodTest {
                                     }
                                 ]
                                 """))
-                .andExpect(content().string(containsString("G-11")))
+                .andExpect(content().string(containsString("INVALID_EXTENSION")))
                 .andDo(print());
     }
 
@@ -137,6 +139,15 @@ class FileControllerTest extends ApplicationPeriodTest {
     @AuthenticatedUser
     @Transactional
     void exceeded_portfolio_max_size() throws Exception {
+        // given
+        recruitRepository.save(Recruit.builder()
+                .jobFamily(BE)
+                .semesterId(1L)
+                .startDate(LocalDateTime.now().plusDays(3))
+                .endDate(LocalDateTime.now().plusDays(5))
+                .build());
+
+        // when, then
         mockMvc.perform(post("/upload/portfolios")
                         .contentType("application/json")
                         .param("memberId", member.getId().toString())

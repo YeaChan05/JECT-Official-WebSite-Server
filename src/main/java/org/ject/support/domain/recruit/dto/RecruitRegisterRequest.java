@@ -12,7 +12,6 @@ public record RecruitRegisterRequest(
         JobFamily jobFamily,
 
         @NotNull(message = "모집 시작일은 필수입니다.")
-        @Future(message = "모집 시작일은 현재 시각보다 이후여야 합니다.")
         LocalDateTime startDate,
 
         @NotNull(message = "모집 종료일은 필수입니다.")
