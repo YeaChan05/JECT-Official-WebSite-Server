@@ -1,7 +1,7 @@
 package org.ject.support.domain.recruit.service;
 
 import lombok.RequiredArgsConstructor;
-import org.ject.support.domain.recruit.domain.Recruit;
+import org.ject.support.domain.member.JobFamily;
 import org.ject.support.domain.recruit.dto.Constants;
 import org.ject.support.domain.recruit.repository.RecruitRepository;
 import org.springframework.boot.ApplicationArguments;
@@ -11,6 +11,11 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+
+import static org.ject.support.domain.member.JobFamily.BE;
+import static org.ject.support.domain.member.JobFamily.FE;
+import static org.ject.support.domain.member.JobFamily.PD;
+import static org.ject.support.domain.member.JobFamily.PM;
 
 /**
  * 기한 외 접근 제한을 위한 flag caching 초기화
@@ -23,16 +28,22 @@ public class AccessPeriodInitializer implements ApplicationRunner {
 
     @Override
     public void run(final ApplicationArguments args) {
-        if (Boolean.FALSE.equals(redisTemplate.hasKey(Constants.PERIOD_FLAG))) {// flag가 저장되어있지 않으면
-            recruitRepository.findByStartDateAfterAndEndDateBefore(LocalDateTime.now())
-                    .ifPresent(this::setRecruitFlag);
+        setRecruitFlag(PM);
+        setRecruitFlag(PD);
+        setRecruitFlag(FE);
+        setRecruitFlag(BE);
+    }
 
+    private void setRecruitFlag(JobFamily jobFamily) {
+        if (Boolean.FALSE.equals(redisTemplate.hasKey(getKey(jobFamily)))) {
+            recruitRepository.findActiveRecruitByJobFamily(jobFamily, LocalDateTime.now())
+                    .ifPresent(recruit -> redisTemplate.opsForValue().set(
+                            getKey(jobFamily), Boolean.toString(true),
+                            Duration.between(recruit.getStartDate(), recruit.getEndDate())));
         }
     }
 
-    private void setRecruitFlag(final Recruit recruit) {
-        redisTemplate.opsForValue().set(
-                Constants.PERIOD_FLAG, Boolean.toString(true),// 존재여부를 redis에 저장
-                Duration.between(recruit.getStartDate(), recruit.getEndDate()));// ttl은 지원 기간동안 살아있도록
+    private String getKey(JobFamily jobFamily) {
+        return String.format("%s%s", Constants.RECRUIT_FLAG_PREFIX, jobFamily);
     }
 }

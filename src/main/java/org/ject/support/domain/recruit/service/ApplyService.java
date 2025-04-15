@@ -38,7 +38,7 @@ public class ApplyService implements ApplyUsecase {
     private final Map2JsonSerializer map2JsonSerializer;
 
     @Override
-    @PeriodAccessible
+    @PeriodAccessible(permitAllJob = true)
     @Transactional(readOnly = true)
     public ApplyTemporaryResponse getTemporaryApplication(final Long memberId) {
         return temporaryApplyService.findMembersRecentTemporaryApplication(memberId);
@@ -62,7 +62,7 @@ public class ApplyService implements ApplyUsecase {
     }
 
     @Override
-    @PeriodAccessible
+    @PeriodAccessible(permitAllJob = true)
     @Transactional
     public void deleteTemporaryApplications(Long memberId) {
         // memberId를 통해 기존 임시 지원서 모두 제거

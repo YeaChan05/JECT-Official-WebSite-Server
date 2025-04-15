@@ -3,7 +3,7 @@ package org.ject.support.domain.recruit.domain;
 import jakarta.persistence.PostPersist;
 import jakarta.persistence.PostUpdate;
 import lombok.RequiredArgsConstructor;
-import org.ject.support.domain.recruit.dto.RecruitOpenedEvent;
+import org.ject.support.domain.recruit.dto.RecruitSavedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,7 @@ public class RecruitEntityListener {
     @PostUpdate
     public void postPersist(Recruit recruit) {
         if(recruit.isRecruitingPeriod()) {
-            applicationEventPublisher.publishEvent(new RecruitOpenedEvent(recruit.getId()));
+            applicationEventPublisher.publishEvent(new RecruitSavedEvent(recruit.getId()));
         }
     }
 }

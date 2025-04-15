@@ -18,7 +18,8 @@ public enum GlobalErrorCode implements ErrorCode {
     INTERNAL_SERVER_ERROR("G-10", "Internal server error"),
     OVER_PERIOD("G-11", "모집 기간이 아닙니다."),
     MISS_REQUIRED_REQUEST_PARAMETER("G-12", "Missing required parameter"),
-    MISS_REQUEST_BODY("G-13", "Missing request body"),;
+    MISS_REQUEST_BODY("G-13", "Missing request body"),
+    MISS_REQUIRED_JOB_FAMILY_PARAMETER("G-14", "Missing required JobFamily parameter"),;
 
     private final String code;
     private final String message;
