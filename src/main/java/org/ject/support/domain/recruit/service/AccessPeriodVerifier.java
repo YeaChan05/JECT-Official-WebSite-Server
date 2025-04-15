@@ -17,7 +17,7 @@ import java.util.Arrays;
 @Aspect
 @Component
 @RequiredArgsConstructor
-public class AccessPeriodVerificator {
+public class AccessPeriodVerifier {
     private final RedisTemplate<String, String> redisTemplate;
 
     @Around("@annotation(org.ject.support.common.util.PeriodAccessible) && @annotation(target)")

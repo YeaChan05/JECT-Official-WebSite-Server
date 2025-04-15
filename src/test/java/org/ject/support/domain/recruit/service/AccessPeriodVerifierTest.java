@@ -21,10 +21,10 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class AccessPeriodVerificatorTest {
+class AccessPeriodVerifierTest {
 
     @InjectMocks
-    AccessPeriodVerificator accessPeriodVerificator;
+    AccessPeriodVerifier accessPeriodVerifier;
 
     @Mock
     ProceedingJoinPoint joinPoint;
@@ -53,7 +53,7 @@ class AccessPeriodVerificatorTest {
         when(joinPoint.proceed()).thenReturn("OK");
 
         // when
-        Object result = accessPeriodVerificator.checkRecruitmentPeriod(joinPoint, target);
+        Object result = accessPeriodVerifier.checkRecruitmentPeriod(joinPoint, target);
 
         // then
         assertThat(result).isEqualTo("OK");
@@ -67,7 +67,7 @@ class AccessPeriodVerificatorTest {
         when(valueOperations.get(anyString())).thenReturn("false");
 
         // when, then
-        assertThatThrownBy(() -> accessPeriodVerificator.checkRecruitmentPeriod(joinPoint, target))
+        assertThatThrownBy(() -> accessPeriodVerifier.checkRecruitmentPeriod(joinPoint, target))
                 .isInstanceOf(GlobalException.class);
     }
 
@@ -82,7 +82,7 @@ class AccessPeriodVerificatorTest {
         when(joinPoint.proceed()).thenReturn("OK");
 
         // when
-        Object result = accessPeriodVerificator.checkRecruitmentPeriod(joinPoint, target);
+        Object result = accessPeriodVerifier.checkRecruitmentPeriod(joinPoint, target);
 
         // then
         assertThat(result).isEqualTo("OK");
@@ -97,7 +97,7 @@ class AccessPeriodVerificatorTest {
         when(valueOperations.get(anyString())).thenReturn("false");
 
         // when, then
-        assertThatThrownBy(() -> accessPeriodVerificator.checkRecruitmentPeriod(joinPoint, target))
+        assertThatThrownBy(() -> accessPeriodVerifier.checkRecruitmentPeriod(joinPoint, target))
                 .isInstanceOf(GlobalException.class);
     }
 
@@ -109,7 +109,7 @@ class AccessPeriodVerificatorTest {
         when(joinPoint.getArgs()).thenReturn(new Object[]{"string", 123}); // JobFamily 없음
 
         // when, then
-        assertThatThrownBy(() -> accessPeriodVerificator.checkRecruitmentPeriod(joinPoint, target))
+        assertThatThrownBy(() -> accessPeriodVerifier.checkRecruitmentPeriod(joinPoint, target))
                 .isInstanceOf(GlobalException.class);
     }
 }
