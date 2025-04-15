@@ -15,8 +15,6 @@ public class RecruitEntityListener {
     @PostPersist
     @PostUpdate
     public void postPersist(Recruit recruit) {
-        if(recruit.isRecruitingPeriod()) {
-            applicationEventPublisher.publishEvent(new RecruitSavedEvent(recruit.getId()));
-        }
+        applicationEventPublisher.publishEvent(new RecruitSavedEvent(recruit.getId()));
     }
 }
