@@ -3,6 +3,8 @@ package org.ject.support.domain.project.repository;
 import static org.ject.support.domain.project.entity.Project.Category;
 import static org.ject.support.domain.project.entity.QProject.project;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -32,7 +34,7 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                         project.description
                 ))
                 .from(project)
-                .where(project.category.eq(category), project.semesterId.eq(semesterId))
+                .where(project.category.eq(category), eqSemesterId(semesterId))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -42,5 +44,12 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                 .from(project);
 
         return PageResponse.from(content, pageable, countQuery.fetchFirst());
+    }
+
+    private BooleanExpression eqSemesterId(Long semesterId) {
+        if (semesterId == null) {
+            return Expressions.TRUE;
+        }
+        return project.semesterId.eq(semesterId);
     }
 }
