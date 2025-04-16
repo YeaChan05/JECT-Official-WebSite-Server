@@ -110,6 +110,27 @@ class ProjectQueryRepositoryTest {
         assertThat(found.getTechStack()).containsExactly("Java", "Spring Boot", "MySQL", "JPA");
     }
 
+    @Test
+    @DisplayName("semesterId가 null이면 전체 조회")
+    void find_all_projects_by_semester_id_null() {
+        // given
+        Project project1 = createProject(MAIN, 1L, team1);
+        Project project2 = createProject(MAIN, 1L, team2);
+        Project project3 = createProject(MAIN, 2L, team3);
+        Project project4 = createProject(MAIN, 2L, team3);
+        projectRepository.saveAll(List.of(project1, project2, project3, project4));
+
+        // when
+        Page<ProjectResponse> result =
+                projectRepository.findProjectsByCategoryAndSemester(MAIN, null, PageRequest.of(0, 30));
+
+        // then
+        assertThat(result).isNotNull();
+
+        List<ProjectResponse> responses = result.getContent();
+        assertThat(responses).hasSize(4);
+    }
+
     private Project createProject(Project.Category category, Long semesterId, Team team) {
         return Project.builder()
                 .name("projectName")
