@@ -49,4 +49,10 @@ public class ApplyController {
                                   @RequestBody SubmitApplicationRequest request) {
         applyUsecase.submitApplication(memberId, jobFamily, request.answers(), request.portfolios());
     }
+
+    @GetMapping("/status")
+    @PreAuthorize("hasRole('ROLE_TEMP')")
+    public boolean checkApplyStatus(@AuthPrincipal Long memberId) {
+        return applyUsecase.checkApplySubmit(memberId);
+    }
 }
