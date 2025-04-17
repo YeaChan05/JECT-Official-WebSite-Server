@@ -94,6 +94,12 @@ public class ApplyService implements ApplyUsecase {
         applicationFormRepository.save(applicationForm);
     }
 
+    @Override
+    @PeriodAccessible(permitAllJob = true)
+    public boolean checkApplySubmit(Long memberId) {
+        return applicationFormRepository.existsByMemberId(memberId, LocalDateTime.now());
+    }
+
     private void validateQuestions(final Map<String, String> answers, final Recruit recruit) {
         answers.keySet().stream()
                 .map(Long::parseLong)
