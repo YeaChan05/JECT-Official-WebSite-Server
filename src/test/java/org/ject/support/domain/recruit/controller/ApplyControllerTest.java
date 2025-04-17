@@ -6,6 +6,7 @@ import org.ject.support.domain.member.repository.MemberRepository;
 import org.ject.support.domain.recruit.domain.Question;
 import org.ject.support.domain.recruit.domain.Recruit;
 import org.ject.support.domain.recruit.dto.ApplyPortfolioDto;
+import org.ject.support.domain.recruit.repository.ApplicationFormRepository;
 import org.ject.support.domain.recruit.repository.RecruitRepository;
 import org.ject.support.domain.tempapply.domain.TemporaryApplication;
 import org.ject.support.domain.tempapply.repository.TemporaryApplicationRepository;
@@ -57,6 +58,9 @@ class ApplyControllerTest extends ApplicationPeriodTest {
     @Autowired
     TemporaryApplicationRepository temporaryApplicationRepository;
 
+    @Autowired
+    ApplicationFormRepository applicationFormRepository;
+
     Member member;
 
     @BeforeEach
@@ -97,6 +101,9 @@ class ApplyControllerTest extends ApplicationPeriodTest {
     @AfterEach
     void tearDown() {
         temporaryApplicationRepository.deleteAll();
+        applicationFormRepository.deleteAll();
+        recruitRepository.deleteAll();
+        memberRepository.deleteAll();
     }
 
     @Test
@@ -272,7 +279,6 @@ class ApplyControllerTest extends ApplicationPeriodTest {
 //                .andExpect(content().string(containsString("SUCCESS")))
                 .andDo(print())
                 .andReturn();
-
     }
 
     private TemporaryApplication createTemporaryApplication(String memberId,

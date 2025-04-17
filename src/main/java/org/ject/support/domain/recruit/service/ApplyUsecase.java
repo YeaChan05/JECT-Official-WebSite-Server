@@ -22,4 +22,6 @@ public interface ApplyUsecase {
                            JobFamily jobFamily,
                            Map<String, String> answers,
                            List<ApplyPortfolioDto> portfolios);
+
+    boolean checkApplySubmit(Long memberId);
 }
