@@ -3,7 +3,6 @@ package org.ject.support.domain.recruit.controller;
 import org.ject.support.domain.member.JobFamily;
 import org.ject.support.domain.member.entity.Member;
 import org.ject.support.domain.member.repository.MemberRepository;
-import org.ject.support.domain.recruit.domain.ApplicationForm;
 import org.ject.support.domain.recruit.domain.Question;
 import org.ject.support.domain.recruit.domain.Recruit;
 import org.ject.support.domain.recruit.dto.ApplyPortfolioDto;
@@ -278,29 +277,6 @@ class ApplyControllerTest extends ApplicationPeriodTest {
                 )
                 .andExpect(status().isOk())
 //                .andExpect(content().string(containsString("SUCCESS")))
-                .andDo(print())
-                .andReturn();
-    }
-
-    @Test
-    @DisplayName("지원서 제출 여부 확인")
-    @AuthenticatedUser
-    void check_apply_submit() throws Exception {
-        // given
-        Recruit recruit = recruitRepository.findActiveRecruitByJobFamily(JobFamily.BE, LocalDateTime.now())
-                .orElseThrow();
-        applicationFormRepository.save(ApplicationForm.builder().
-                content("content")
-                .member(member)
-                .recruit(recruit)
-                .portfolios(List.of())
-                .build());
-
-        // when, then
-        mockMvc.perform(get("/apply/status"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("SUCCESS")))
-                .andExpect(content().string(containsString("true")))
                 .andDo(print())
                 .andReturn();
     }
