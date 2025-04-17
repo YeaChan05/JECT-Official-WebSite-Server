@@ -35,6 +35,7 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                 ))
                 .from(project)
                 .where(project.category.eq(category), eqSemesterId(semesterId))
+                .orderBy(project.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();

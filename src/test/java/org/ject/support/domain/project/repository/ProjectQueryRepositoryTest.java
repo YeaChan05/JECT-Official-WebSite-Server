@@ -60,7 +60,7 @@ class ProjectQueryRepositoryTest {
         assertThat(responses).hasSize(2);
 
         ProjectResponse firstResponse = responses.get(0);
-        assertThat(firstResponse.id()).isEqualTo(1);
+        assertThat(firstResponse.id()).isEqualTo(2L);
         assertThat(firstResponse.name()).isEqualTo("projectName");
         assertThat(firstResponse.summary()).isEqualTo("summary");
         assertThat(firstResponse.thumbnailUrl()).isEqualTo("https://test.net/thumbnail.png");
